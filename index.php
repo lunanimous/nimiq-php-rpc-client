@@ -2,9 +2,11 @@
 
 require 'vendor/autoload.php';
 
-include_once 'src/Client.php';
+include_once 'src/Rpc/Client.php';
+include_once 'src/Rpc/NimiqResponse.php';
 
 $client = new \Lunanimous\Rpc\Client();
-$body = $client->getBlockByNumber('1', 1);
+$response = $client->blockNumber();
 
-print_r($body['result']);
+$result = $response->getResult();
+var_dump($result);

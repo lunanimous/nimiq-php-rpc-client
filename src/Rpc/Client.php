@@ -58,7 +58,7 @@ class Client
     /**
      * Makes request to Nimiq Node.
      */
-    public function __call(string $method, array $params = []): array
+    public function __call(string $method, array $params = []): NimiqResponse
     {
         return $this->request($method, ...$params);
     }
@@ -68,16 +68,17 @@ class Client
      *
      * @param mixed $params
      */
-    public function request(string $method, ...$params): array
+    public function request(string $method, ...$params): NimiqResponse
     {
-        $response = $this->client->post($this->path, $this->makeJson($method, $params));
+        $originalResponse = $this->client->post($this->path, $this->makeJson($method, $params));
 
-        $body = json_decode((string) $response->getBody(), true);
-        if (isset($body['error'])) {
-            throw new BadMethodCallException($body['error']['message'], $body['error']['code']);
+        $response = new \Lunanimous\Rpc\NimiqResponse($originalResponse);
+
+        if ($response->hasError()) {
+            throw new BadMethodCallException($response->getError()['message'], $response->getError()['code']);
         }
 
-        return $body;
+        return $response;
     }
 
     /**
