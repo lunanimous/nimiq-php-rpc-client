@@ -45,22 +45,16 @@ class Client
     {
         $this->config = array_merge($this->config, $config);
 
-        // construct client
-        $this->client = new GuzzleHttp([
+        // construct http client
+        $httpClient = new GuzzleHttp([
             'base_uri' => $this->getBaseUri(),
             'auth' => $this->getAuth(),
             'verify' => $this->getCa(),
             'timeout' => (float) $this->config['timeout'],
             'connect_timeout' => (float) $this->config['timeout'],
         ]);
-    }
 
-    /**
-     * Makes request to Nimiq Node.
-     */
-    public function __call(string $method, array $params = []): Response
-    {
-        return $this->request($method, ...$params);
+        $this->setClient($httpClient);
     }
 
     /**
@@ -68,7 +62,7 @@ class Client
      *
      * @param mixed $params
      */
-    public function request(string $method, ...$params): Response
+    public function request(string $method, ...$params)
     {
         $originalResponse = $this->client->post($this->path, $this->makeJson($method, $params));
 
@@ -78,7 +72,7 @@ class Client
             throw new BadMethodCallException($response->getError()['message'], $response->getError()['code']);
         }
 
-        return $response;
+        return $response->getResult();
     }
 
     /**
@@ -110,6 +104,14 @@ class Client
     public function getBaseUri(): string
     {
         return $this->config['scheme'].'://'.$this->config['host'].':'.$this->config['port'];
+    }
+
+    /**
+     * Sets the HTTP client.
+     */
+    public function setClient(GuzzleHttp $client)
+    {
+        $this->client = $client;
     }
 
     /**
