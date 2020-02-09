@@ -30,6 +30,14 @@ class Response
     }
 
     /**
+     * Gets the RPC id.
+     */
+    public function getId(): int
+    {
+        return $this->data['id'];
+    }
+
+    /**
      * Checks if response has error.
      */
     public function hasError(): bool
