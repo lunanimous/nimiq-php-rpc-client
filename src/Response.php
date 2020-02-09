@@ -4,14 +4,14 @@ namespace Lunanimous\Rpc;
 
 use Psr\Http\Message\ResponseInterface;
 
-class NimiqResponse
+class Response
 {
     /**
      * Original response.
      *
      * @var ResponseInterface
      */
-    protected $original;
+    protected $response;
 
     /**
      * Data response.
@@ -25,7 +25,7 @@ class NimiqResponse
      */
     public function __construct(ResponseInterface $response)
     {
-        $this->original = $response;
+        $this->response = $response;
         $this->data = json_decode((string) $response->getBody(), true);
     }
 
@@ -64,8 +64,8 @@ class NimiqResponse
     /**
      * Gets the original response.
      */
-    public function getOriginal(): ResponseInterface
+    public function getResponse(): ResponseInterface
     {
-        return $this->original;
+        return $this->response;
     }
 }

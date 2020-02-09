@@ -1,15 +1,24 @@
 {
-    "name": "lunanimous/nimiq-php-rpc-client",
+    "name": "lunanimous/rpc",
     "description": "Nimiq RPC Client for PHP",
     "type": "library",
-    "require": {
-        "guzzlehttp/guzzle": "^6.5"
-    },
     "license": "MIT",
     "authors": [
         {
             "name": "Mario",
             "email": "builtbysplash@gmail.com"
         }
-    ]
+    ],
+    "require": {
+        "php": ">=7.1",
+        "guzzlehttp/guzzle": "^6.5"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Lunanimous\\Rpc\\": "src"
+        }
+    }
 }
