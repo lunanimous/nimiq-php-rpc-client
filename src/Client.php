@@ -95,7 +95,7 @@ class Client
             return $this->config['ca'];
         }
 
-        return null;
+        return false;
     }
 
     /**
