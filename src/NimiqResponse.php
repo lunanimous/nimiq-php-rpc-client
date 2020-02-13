@@ -4,7 +4,7 @@ namespace Lunanimous\Rpc;
 
 use Psr\Http\Message\ResponseInterface;
 
-class Response
+class NimiqResponse
 {
     /**
      * Original response.

@@ -125,7 +125,7 @@ class NimiqClient extends Client
      *
      * @return array Transaction info
      */
-    public function getTransactionByBlockHashAndIndex($blockHash, $txIndex): Response
+    public function getTransactionByBlockHashAndIndex($blockHash, $txIndex)
     {
         return $this->request('getTransactionByBlockHashAndIndex', $blockHash, $txIndex);
     }
