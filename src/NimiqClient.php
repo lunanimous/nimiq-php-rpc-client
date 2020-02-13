@@ -15,21 +15,21 @@ class NimiqClient extends Client
     }
 
     /**
-     * Gets the syncing status.
+     * Gets the syncing state.
      *
-     * @return array Sync status
+     * @return array Sync state
      */
-    public function getSyncingStatus()
+    public function getSyncingState()
     {
         return $this->request('syncing');
     }
 
     /**
-     * Gets the consensus status.
+     * Gets the consensus state.
      *
-     * @return string Consensus status
+     * @return string Consensus state
      */
-    public function getConsensusStatus()
+    public function getConsensusState()
     {
         return $this->request('consensus');
     }
@@ -226,23 +226,23 @@ class NimiqClient extends Client
     }
 
     /**
-     * Gets the mining status.
+     * Gets the mining state.
      *
-     * @return bool Mining status
+     * @return bool Mining state
      */
-    public function getMiningStatus()
+    public function getMiningState()
     {
         return $this->request('mining');
     }
 
     /**
-     * Sets the mining status.
+     * Sets the mining state.
      *
-     * @param bool $enabled Mining status
+     * @param bool $enabled Mining state
      *
-     * @return bool Mining status
+     * @return bool Mining state
      */
-    public function setMiningStatus($enabled)
+    public function setMiningState($enabled)
     {
         return $this->request('minig', $enabled);
     }
@@ -312,9 +312,9 @@ class NimiqClient extends Client
     }
 
     /**
-     * Gets connection status to mining pool.
+     * Gets connection state to mining pool.
      *
-     * @return int Pool connection status
+     * @return int Pool connection state
      */
     public function getPoolConnectionState()
     {
