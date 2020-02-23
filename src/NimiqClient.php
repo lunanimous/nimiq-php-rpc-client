@@ -5,9 +5,9 @@ namespace Lunanimous\Rpc;
 class NimiqClient extends Client
 {
     /**
-     * Gets the peer count.
+     * Returns number of peers currently connected to the client.
      *
-     * @return int Number of connected peers
+     * @return int number of connected peers
      */
     public function getPeerCount()
     {
@@ -15,19 +15,21 @@ class NimiqClient extends Client
     }
 
     /**
-     * Gets the syncing state.
+     * Returns an object with data about the sync status or false.
      *
-     * @return array Sync state
+     * @return array|bool object with sync status data or false, when not syncing
      */
     public function getSyncingState()
     {
+        // TODO: create class for sync status data
         return $this->request('syncing');
     }
 
     /**
-     * Gets the consensus state.
+     * Returns information on the current consensus state.
      *
-     * @return string Consensus state
+     * @return string string describing the consensus state. "established" is the value for a good state, other
+     *                values indicate bad state.
      */
     public function getConsensusState()
     {
@@ -35,9 +37,9 @@ class NimiqClient extends Client
     }
 
     /**
-     * Gets the list of peers.
+     * Returns list of peers known to the client.
      *
-     * @return array List of peers
+     * @return array list of peers
      */
     public function getPeerList()
     {
@@ -45,11 +47,11 @@ class NimiqClient extends Client
     }
 
     /**
-     * Gets the peer.
+     * Returns the state of the peer.
      *
-     * @param string $peer Peer name
+     * @param string $peer address of the peer
      *
-     * @return array Peer info
+     * @return array current state of the peer
      */
     public function getPeer($peer)
     {
@@ -59,10 +61,10 @@ class NimiqClient extends Client
     /**
      * Sets the state of the peer.
      *
-     * @param string $peer    Peer name
-     * @param string $command Command to perform (connect, disconnect, ban, unban)
+     * @param string $peer    address of the peer
+     * @param string $command command to perform (on of "connect", "disconnect", "ban", "unban")
      *
-     * @return array Peer info
+     * @return array new state of the peer
      */
     public function setPeerState($peer, $command)
     {
@@ -70,11 +72,11 @@ class NimiqClient extends Client
     }
 
     /**
-     * Sends a raw transaction.
+     * Sends a signed message call transaction or a contract creation, if the data field contains code.
      *
-     * @param string $txHex Hex-encoded transaction
+     * @param string $txHex hex-encoded signed transaction
      *
-     * @return string Transaction hash
+     * @return string hex-encoded transaction hash
      */
     public function sendRawTransaction($txHex)
     {
@@ -82,85 +84,92 @@ class NimiqClient extends Client
     }
 
     /**
-     * Creates a raw transaction.
+     * Creates and signs a transaction without sending it. The transaction can then be send via sendRawTransaction
+     * without accidentally replaying it.
      *
-     * @param Transaction $tx Transaction object
+     * @param OutgoingTransaction $tx transaction object
      *
-     * @return string Hex-encoded transaction
+     * @return string hex-encoded transaction
      */
     public function createRawTransaction($tx)
     {
+        // TODO: create transaction class
         return $this->request('createRawTransaction', $tx);
     }
 
     /**
-     * Sends a transaction.
+     * Creates new message call transaction or a contract creation, if the data field contains code.
      *
-     * @param Transaction $tx Transaction object
+     * @param OutgoingTransaction $tx transaction object
      *
-     * @return string Transaction hash
+     * @return string hex-encoded transaction hash
      */
     public function sendTransaction($tx)
     {
+        // TODO: create transaction class
         return $this->request('sendTransaction', $tx);
     }
 
     /**
-     * Gets raw transaction info.
+     * Deserializes hex-encoded transaction and returns a transaction object.
      *
-     * @param string $txHex Hex-encoded transaction
+     * @param string $txHex hex-encoded transaction
      *
-     * @return array Transaction info
+     * @return Transaction transaction object
      */
     public function getRawTransactionInfo($txHex)
     {
+        // TODO: create transaction class
         return $this->request('getRawTransactionInfo', $txHex);
     }
 
     /**
-     * Gets the transaction by block hash and transaction index.
+     * Returns information about a transaction by block hash and transaction index position.
      *
-     * @param string $blockHash Hash of the block
-     * @param int    $txIndex   Index of the transaction
+     * @param string $blockHash hash of the block containing the transaction
+     * @param int    $txIndex   index of the transaction in the block
      *
-     * @return array Transaction info
+     * @return null|Transaction transaction object, or null when no transaction was found
      */
     public function getTransactionByBlockHashAndIndex($blockHash, $txIndex)
     {
+        // TODO: create transaction class
         return $this->request('getTransactionByBlockHashAndIndex', $blockHash, $txIndex);
     }
 
     /**
-     * Gets the transaction by block number and transaction index.
+     * Returns information about a transaction by block number and transaction index position.
      *
-     * @param int $blockNumber Number of the block
-     * @param int $txIndex     Index of the transaction
+     * @param int $blockNumber height of the block containing the transaction
+     * @param int $txIndex     index of the transaction in the block
      *
-     * @return array Transaction info
+     * @return null|Transaction transaction object, or null when no transaction was found
      */
     public function getTransactionByBlockNumberAndIndex($blockNumber, $txIndex)
     {
+        // TODO: create transaction class
         return $this->request('getTransactionByBlockNumberAndIndex', $blockNumber, $txIndex);
     }
 
     /**
-     * Gets the transaction by hash.
+     * Returns the information about a transaction requested by transaction hash.
      *
-     * @param string $hash Hash of the transaction
+     * @param string $hash hash of the transaction
      *
-     * @return array Transaction info
+     * @return null|Transaction transaction object, or null when no transaction was found
      */
     public function getTransactionByHash($hash)
     {
+        // TODO: create transaction class
         return $this->request('getTransactionByHash', $hash);
     }
 
     /**
-     * Gets the transaction receipt.
+     * Returns the receipt of a transaction by transaction hash. The receipt is not available for pending transactions.
      *
-     * @param string $hash Hash of the transaction
+     * @param string $hash hash of the transaction
      *
-     * @return array Transaction receipt
+     * @return array transaction receipt
      */
     public function getTransactionReceipt($hash)
     {
@@ -168,12 +177,13 @@ class NimiqClient extends Client
     }
 
     /**
-     * Gets the transactions for an address.
+     * Returns the latest transactions successfully performed by or for an address. This information might change
+     * when blocks are rewinded on the local state due to forks.
      *
-     * @param string $address Account address
-     * @param int    $limit   Number of transactions to get
+     * @param string $address account address
+     * @param int    $limit   (optional, default 1000) number of transactions to return
      *
-     * @return array List of transactions
+     * @return Transaction[] array of transactions linked to the requested address
      */
     public function getTransactionsByAddress($address, $limit = 1000)
     {
@@ -181,12 +191,12 @@ class NimiqClient extends Client
     }
 
     /**
-     * Gets the content of the mempool.
+     * Returns transactions that are currently in the mempool.
      *
-     * @param bool $includeTransactions If true includes full transactions,
+     * @param bool $includeTransactions if true includes full transactions,
      *                                  if false includes only transaction hashes
      *
-     * @return array List of transactions in mempool
+     * @return Transaction[] array of transactions (either represented by the transaction hash or a transaction object)
      */
     public function getMempoolContent($includeTransactions = false)
     {
@@ -194,9 +204,10 @@ class NimiqClient extends Client
     }
 
     /**
-     * Gets mempool statistics.
+     * Returns information on the current mempool situation. This will provide an overview of the number of
+     * transactions sorted into buckets based on their fee per byte (in smallest unit).
      *
-     * @return array Mempool stats
+     * @return array mempool information
      */
     public function getMempool()
     {
@@ -204,9 +215,9 @@ class NimiqClient extends Client
     }
 
     /**
-     * Gets the min fee per byte.
+     * Returns the current minimum fee per byte.
      *
-     * @return int Current min fee per byte
+     * @return int current minimum fee per byte
      */
     public function getMinFeePerByte()
     {
@@ -214,11 +225,11 @@ class NimiqClient extends Client
     }
 
     /**
-     * Sets the min fee per byte.
+     * Sets the minimum fee per byte.
      *
-     * @param int $minFee Min fee per byte
+     * @param int $minFee minimum fee per byte
      *
-     * @return int New min fee per byte
+     * @return int new minimum fee per byte
      */
     public function setMinFeePerByte($minFee)
     {
@@ -226,9 +237,9 @@ class NimiqClient extends Client
     }
 
     /**
-     * Gets the mining state.
+     * Returns true if client is actively mining new blocks.
      *
-     * @return bool Mining state
+     * @return bool true if the client is mining, otherwise false
      */
     public function getMiningState()
     {
@@ -236,21 +247,21 @@ class NimiqClient extends Client
     }
 
     /**
-     * Sets the mining state.
+     * Enables or disables the miner.
      *
-     * @param bool $enabled Mining state
+     * @param bool $enabled true to start the miner, false to stop
      *
-     * @return bool Mining state
+     * @return bool true if the client is mining, otherwise false
      */
     public function setMiningState($enabled)
     {
-        return $this->request('minig', $enabled);
+        return $this->request('mining', $enabled);
     }
 
     /**
-     * Gets current hashrate.
+     * Returns the number of hashes per second that the node is mining with.
      *
-     * @return int Current hashrate
+     * @return float number of hashes per second
      */
     public function getHashrate()
     {
@@ -258,9 +269,9 @@ class NimiqClient extends Client
     }
 
     /**
-     * Gets current miner threads.
+     * Returns the number of CPU threads the miner is using.
      *
-     * @return int Current number of miner threads
+     * @return int current number of miner threads
      */
     public function getMinerThreads()
     {
@@ -268,11 +279,11 @@ class NimiqClient extends Client
     }
 
     /**
-     * Sets miner threads.
+     * Sets the number of CPU threads the miner can use.
      *
-     * @param int $threads Number of threads to allocate
+     * @param int $threads number of threads to allocate
      *
-     * @return int New number of miner threads
+     * @return int new number of miner threads
      */
     public function setMinerThreads($threads)
     {
@@ -280,9 +291,9 @@ class NimiqClient extends Client
     }
 
     /**
-     * Gets the address used for mining rewards.
+     * Returns the miner address.
      *
-     * @return string Address for mining rewards
+     * @return string miner address
      */
     public function getMinerAddress()
     {
@@ -290,9 +301,9 @@ class NimiqClient extends Client
     }
 
     /**
-     * Gets the current mining pool.
+     * Returns the current pool.
      *
-     * @return string Current pool URL
+     * @return null|string current pool, or null if not set
      */
     public function getPool()
     {
@@ -302,9 +313,9 @@ class NimiqClient extends Client
     /**
      * Sets the mining pool.
      *
-     * @param bool|string $pool Mining pool string (url:port) or boolean
+     * @param bool|string $pool mining pool string (url:port) or boolean to enable/disable pool mining
      *
-     * @return string New pool URL
+     * @return null|string new mining pool, or null if not enabled
      */
     public function setPool($pool)
     {
@@ -312,9 +323,9 @@ class NimiqClient extends Client
     }
 
     /**
-     * Gets connection state to mining pool.
+     * Returns the connection state to mining pool.
      *
-     * @return int Pool connection state
+     * @return int mining pool connection state (0: connected, 1: connecting, 2: closed)
      */
     public function getPoolConnectionState()
     {
@@ -322,9 +333,9 @@ class NimiqClient extends Client
     }
 
     /**
-     * Gets confirmed mining pool balance.
+     * Returns the confirmed mining pool balance.
      *
-     * @return int Confirmed mining pool balance
+     * @return float confirmed mining pool balance (in smallest unit)
      */
     public function getPoolConfirmedBalance()
     {
@@ -332,12 +343,14 @@ class NimiqClient extends Client
     }
 
     /**
-     * Gets work for next block.
+     * Returns instructions to mine the next block. This will consider pool instructions when connected to a pool.
      *
-     * @param string $address      Mining address to use
-     * @param string $extraDataHex Extra Data
+     * @param string $address      address to use as a miner for this block. this overrides the address provided
+     *                             during startup or from the pool.
+     * @param string $extraDataHex hex-encoded value for the extra data field. this overrides the address provided
+     *                             during startup or from the pool.
      *
-     * @return array Mining work
+     * @return array mining work instructions
      */
     public function getWork($address, $extraDataHex)
     {
@@ -345,12 +358,15 @@ class NimiqClient extends Client
     }
 
     /**
-     * Gets block template for next block.
+     * Returns a template to build the next block for mining. This will consider pool instructions when connected
+     * to a pool.
      *
-     * @param string $address      Mining address to use
-     * @param string $extraDataHex Hex-encoded extra data
+     * @param string $address      address to use as a miner for this block. this overrides the address provided
+     *                             during startup or from the pool.
+     * @param string $extraDataHex hex-encoded value for the extra data field. this overrides the address provided
+     *                             during startup or from the pool.
      *
-     * @return array Mining block template
+     * @return array mining block template
      */
     public function getBlockTemplate($address, $extraDataHex)
     {
@@ -358,9 +374,10 @@ class NimiqClient extends Client
     }
 
     /**
-     * Submit a mined block.
+     * Submits a block to the node. When the block is valid, the node will forward it to other nodes in the network.
      *
-     * @param string $blockHex Hex-encoded block
+     * @param string $blockHex hex-encoded full block (including header, interlink and body). when submitting work
+     *                         from getWork, remember to include the suffix.
      */
     public function submitBlock($blockHex)
     {
@@ -368,9 +385,9 @@ class NimiqClient extends Client
     }
 
     /**
-     * Gets the accounts stored in node.
+     * Returns a list of addresses owned by client.
      *
-     * @return array List of accounts
+     * @return array array of accounts owned by the client
      */
     public function getAccounts()
     {
@@ -378,9 +395,9 @@ class NimiqClient extends Client
     }
 
     /**
-     * Creates a new account and stores it in node.
+     * Creates a new account and stores its private key in the client store.
      *
-     * @return array New account
+     * @return array information on the wallet that was created using the command
      */
     public function createAccount()
     {
@@ -388,11 +405,11 @@ class NimiqClient extends Client
     }
 
     /**
-     * Gets balance.
+     * Returns the balance of the account of given address.
      *
-     * @param string $address Account address
+     * @param string $address address to check for balance
      *
-     * @return int Balance of account
+     * @return float the current balance at the specified address (in smallest unit)
      */
     public function getBalance($address)
     {
@@ -400,11 +417,11 @@ class NimiqClient extends Client
     }
 
     /**
-     * Gets account detail.
+     * Returns details for the account of given address.
      *
-     * @param string $address
+     * @param string $address address for which to get account details
      *
-     * @return array Account info
+     * @return array details about the account. returns the default empty basic account for non-existing accounts.
      */
     public function getAccount($address)
     {
@@ -412,9 +429,9 @@ class NimiqClient extends Client
     }
 
     /**
-     * Gets current block height.
+     * Returns the height of most recent block.
      *
-     * @return int Current block height
+     * @return int current block height the client is on
      */
     public function getBlockNumber()
     {
@@ -422,11 +439,11 @@ class NimiqClient extends Client
     }
 
     /**
-     * Gets number of transaction in block by block hash.
+     * Returns the number of transactions in a block from a block matching the given block hash.
      *
-     * @param string $blockHash Hash of the block
+     * @param string $blockHash hash of the block
      *
-     * @return int Number of transactions in block
+     * @return null|int number of transactions in the block found, or null when no block was found
      */
     public function getBlockTransactionCountByHash($blockHash)
     {
@@ -434,11 +451,11 @@ class NimiqClient extends Client
     }
 
     /**
-     * Gets number of transactions in block by block number.
+     * Returns the number of transactions in a block matching the given block number.
      *
-     * @param int $blockNumber Number of the block
+     * @param int $blockNumber height of the block
      *
-     * @return int Number of transactions in block
+     * @return null|int number of transactions in the block found, or null when no block was found
      */
     public function getBlockTransactionCountByNumber($blockNumber)
     {
@@ -446,13 +463,13 @@ class NimiqClient extends Client
     }
 
     /**
-     * Gets the block detail by block hash.
+     * Returns information about a block by hash.
      *
-     * @param string $blockHash           Hash of the block
-     * @param bool   $includeTransactions If true includes full transactions,
-     *                                    if false includes only transaction hashes
+     * @param string $blockHash           hash of the block to gather information on
+     * @param bool   $includeTransactions if true includes full transactions,
+     *                                    if false (default) includes only transaction hashes
      *
-     * @return array Block info
+     * @return null|array block object, or null when no block was found
      */
     public function getBlockByHash($blockHash, $includeTransactions = false)
     {
@@ -460,13 +477,13 @@ class NimiqClient extends Client
     }
 
     /**
-     * Gets the block detail by block number.
+     * Returns information about a block by block number.
      *
-     * @param int  $blockNumber         Number of the block
-     * @param bool $includeTransactions If true includes full transactions,
-     *                                  if false includes only transaction hashes
+     * @param int  $blockNumber         height of the block to gather information on
+     * @param bool $includeTransactions if true includes full transactions,
+     *                                  if false (default) includes only transaction hashes
      *
-     * @return array Block info
+     * @return null|array block object, or null when no block was found
      */
     public function getBlockByNumber($blockNumber, $includeTransactions = false)
     {
@@ -474,11 +491,11 @@ class NimiqClient extends Client
     }
 
     /**
-     * Gets the value of a constant.
+     * Returns the value of a constant.
      *
-     * @param string $constant Name of the constant
+     * @param string $constant name of the constant
      *
-     * @return int Value of the constant
+     * @return int current value of the constant
      */
     public function getConstant($constant)
     {
@@ -488,10 +505,10 @@ class NimiqClient extends Client
     /**
      * Sets the value of a constants.
      *
-     * @param string $constant Name of the constant
-     * @param int    $value    Value to set
+     * @param string $constant name of the constant
+     * @param int    $value    value to set
      *
-     * @return int Value of the constant
+     * @return int new value of the constant
      */
     public function setConstant($constant, $value)
     {
@@ -501,9 +518,9 @@ class NimiqClient extends Client
     /**
      * Resets the constant to default value.
      *
-     * * @param string $constant Name of the constant
+     * @param string $constant name of the constant
      *
-     * @return int Value of the constant
+     * @return int new value of the constant
      */
     public function resetConstant($constant)
     {
@@ -511,10 +528,10 @@ class NimiqClient extends Client
     }
 
     /**
-     * Sets log level.
+     * Sets the log level of the node.
      *
-     * @param string $tag   Log tag, use '*' to set all
-     * @param string $level Log level to set (trace, verbose, debug, info, warn, error, assert)
+     * @param string $tag   if '*' the log level is set globally, otherwise the log level is applied only on this tag
+     * @param string $level minimum log level to display (trace, verbose, debug, info, warn, error, assert)
      *
      * @return bool true if set successfully, otherwise false
      */
