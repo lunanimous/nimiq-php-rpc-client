@@ -2,6 +2,13 @@
 
 namespace Lunanimous\Rpc;
 
+use Lunanimous\Rpc\Models\Account;
+use Lunanimous\Rpc\Models\Block;
+use Lunanimous\Rpc\Models\OutgoingTransaction;
+use Lunanimous\Rpc\Models\Transaction;
+use Lunanimous\Rpc\Models\TransactionReceipt;
+use Lunanimous\Rpc\Models\Wallet;
+
 class NimiqClient extends Client
 {
     /**
@@ -21,14 +28,13 @@ class NimiqClient extends Client
      */
     public function getSyncingState()
     {
-        // TODO: create class for sync status data
         return $this->request('syncing');
     }
 
     /**
      * Returns information on the current consensus state.
      *
-     * @return string string describing the consensus state. "established" is the value for a good state, other
+     * @return string string describing the consensus state. ConsensusState::Established is the value for a good state, other
      *                values indicate bad state.
      */
     public function getConsensusState()
@@ -62,11 +68,12 @@ class NimiqClient extends Client
      * Sets the state of the peer.
      *
      * @param string $peer    address of the peer
-     * @param string $command command to perform (on of "connect", "disconnect", "ban", "unban")
+     * @param string $command command to perform (one of PeerStateCommand::Connect, PeerStateCommand::Disconnect,
+     *                        PeerStateCommand::Ban, PeerStateCommand::Unban)
      *
      * @return array new state of the peer
      */
-    public function setPeerState($peer, $command)
+    public function setPeerState(string $peer, string $command)
     {
         return $this->request('peerState', $peer, $command);
     }
@@ -91,10 +98,9 @@ class NimiqClient extends Client
      *
      * @return string hex-encoded transaction
      */
-    public function createRawTransaction($tx)
+    public function createRawTransaction(OutgoingTransaction $tx)
     {
-        // TODO: create transaction class
-        return $this->request('createRawTransaction', $tx);
+        return $this->request('createRawTransaction', $tx->toArray());
     }
 
     /**
@@ -104,10 +110,9 @@ class NimiqClient extends Client
      *
      * @return string hex-encoded transaction hash
      */
-    public function sendTransaction($tx)
+    public function sendTransaction(OutgoingTransaction $tx)
     {
-        // TODO: create transaction class
-        return $this->request('sendTransaction', $tx);
+        return $this->request('sendTransaction', $tx->toArray());
     }
 
     /**
@@ -119,8 +124,9 @@ class NimiqClient extends Client
      */
     public function getRawTransactionInfo($txHex)
     {
-        // TODO: create transaction class
-        return $this->request('getRawTransactionInfo', $txHex);
+        $result = $this->request('getRawTransactionInfo', $txHex);
+
+        return new Transaction($result);
     }
 
     /**
@@ -133,8 +139,13 @@ class NimiqClient extends Client
      */
     public function getTransactionByBlockHashAndIndex($blockHash, $txIndex)
     {
-        // TODO: create transaction class
-        return $this->request('getTransactionByBlockHashAndIndex', $blockHash, $txIndex);
+        $result = $this->request('getTransactionByBlockHashAndIndex', $blockHash, $txIndex);
+
+        if (is_null($result)) {
+            return null;
+        }
+
+        return new Transaction($result);
     }
 
     /**
@@ -147,8 +158,13 @@ class NimiqClient extends Client
      */
     public function getTransactionByBlockNumberAndIndex($blockNumber, $txIndex)
     {
-        // TODO: create transaction class
-        return $this->request('getTransactionByBlockNumberAndIndex', $blockNumber, $txIndex);
+        $result = $this->request('getTransactionByBlockNumberAndIndex', $blockNumber, $txIndex);
+
+        if (is_null($result)) {
+            return null;
+        }
+
+        return new Transaction($result);
     }
 
     /**
@@ -160,8 +176,13 @@ class NimiqClient extends Client
      */
     public function getTransactionByHash($hash)
     {
-        // TODO: create transaction class
-        return $this->request('getTransactionByHash', $hash);
+        $result = $this->request('getTransactionByHash', $hash);
+
+        if (is_null($result)) {
+            return null;
+        }
+
+        return new Transaction($result);
     }
 
     /**
@@ -169,11 +190,13 @@ class NimiqClient extends Client
      *
      * @param string $hash hash of the transaction
      *
-     * @return array transaction receipt
+     * @return TransactionReceipt transaction receipt
      */
     public function getTransactionReceipt($hash)
     {
-        return $this->request('getTransactionReceipt', $hash);
+        $result = $this->request('getTransactionReceipt', $hash);
+
+        return new TransactionReceipt($result);
     }
 
     /**
@@ -187,7 +210,11 @@ class NimiqClient extends Client
      */
     public function getTransactionsByAddress($address, $limit = 1000)
     {
-        return $this->request('getTransactionsByAddress', $address, $limit);
+        $result = $this->request('getTransactionsByAddress', $address, $limit);
+
+        return array_map(function ($rawTransaction) {
+            return new Transaction($rawTransaction);
+        }, $result);
     }
 
     /**
@@ -200,7 +227,15 @@ class NimiqClient extends Client
      */
     public function getMempoolContent($includeTransactions = false)
     {
-        return $this->request('mempoolContent', $includeTransactions);
+        $result = $this->request('mempoolContent', $includeTransactions);
+
+        if ($includeTransactions) {
+            return array_map(function ($rawTransaction) {
+                return new Transaction($rawTransaction);
+            }, $result);
+        }
+
+        return $result;
     }
 
     /**
@@ -387,21 +422,27 @@ class NimiqClient extends Client
     /**
      * Returns a list of addresses owned by client.
      *
-     * @return array array of accounts owned by the client
+     * @return Account[] array of accounts owned by the client
      */
     public function getAccounts()
     {
-        return $this->request('accounts');
+        $result = $this->request('accounts');
+
+        return array_map(function ($rawAccount) {
+            return new Account($rawAccount);
+        }, $result);
     }
 
     /**
      * Creates a new account and stores its private key in the client store.
      *
-     * @return array information on the wallet that was created using the command
+     * @return Wallet information on the wallet that was created using the command
      */
     public function createAccount()
     {
-        return $this->request('createAccount');
+        $result = $this->request('createAccount');
+
+        return new Wallet($result);
     }
 
     /**
@@ -425,7 +466,9 @@ class NimiqClient extends Client
      */
     public function getAccount($address)
     {
-        return $this->request('getAccount', $address);
+        $result = $this->request('getAccount', $address);
+
+        return new Account($result);
     }
 
     /**
@@ -473,7 +516,13 @@ class NimiqClient extends Client
      */
     public function getBlockByHash($blockHash, $includeTransactions = false)
     {
-        return $this->request('getBlockByNumber', $blockHash, $includeTransactions);
+        $result = $this->request('getBlockByHash', $blockHash, $includeTransactions);
+
+        if (is_null($result)) {
+            return null;
+        }
+
+        return new Block($result);
     }
 
     /**
@@ -487,7 +536,13 @@ class NimiqClient extends Client
      */
     public function getBlockByNumber($blockNumber, $includeTransactions = false)
     {
-        return $this->request('getBlockByNumber', $blockNumber, $includeTransactions);
+        $result = $this->request('getBlockByNumber', $blockNumber, $includeTransactions);
+
+        if (is_null($result)) {
+            return null;
+        }
+
+        return new Block($result);
     }
 
     /**

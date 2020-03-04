@@ -1,0 +1,23 @@
+{
+    "jsonrpc": "2.0",
+    "result": [
+        {
+            "id": "b99034c552e9c0fd34eb95c1cdf17f5e",
+            "address": "wss://seed1.nimiq-testnet.com:8080/b99034c552e9c0fd34eb95c1cdf17f5e",
+            "addressState": 2,
+            "connectionState": 5,
+            "version": 2,
+            "timeOffset": -188,
+            "headHash": "59da8ba57c1f0ffd444201ca2d9f48cef7e661262781be7937bb6ef0bdbe0e4d",
+            "latency": 532,
+            "rx": 2122,
+            "tx": 1265
+        },
+        {
+            "id": "e37dca72802c972d45b37735e9595cf0",
+            "address": "wss://seed4.nimiq-testnet.com:8080/e37dca72802c972d45b37735e9595cf0",
+            "addressState": 4
+        }
+    ],
+    "id": 1
+}

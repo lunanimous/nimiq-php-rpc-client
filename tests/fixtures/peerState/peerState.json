@@ -1,0 +1,16 @@
+{
+    "jsonrpc": "2.0",
+    "result": {
+        "id": "b99034c552e9c0fd34eb95c1cdf17f5e",
+        "address": "wss://seed1.nimiq-testnet.com:8080/b99034c552e9c0fd34eb95c1cdf17f5e",
+        "addressState": 2,
+        "connectionState": 5,
+        "version": 2,
+        "timeOffset": 186,
+        "headHash": "910a78e761034e0655bf01b13336793c809f598194a1b841269600ef8b84fe18",
+        "latency": 550,
+        "rx": 3440,
+        "tx": 2696
+    },
+    "id": 1
+}

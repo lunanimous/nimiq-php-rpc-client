@@ -1,0 +1,9 @@
+{
+    "jsonrpc": "2.0",
+    "result": {
+        "id": "e37dca72802c972d45b37735e9595cf0",
+        "address": "wss://seed4.nimiq-testnet.com:8080/e37dca72802c972d45b37735e9595cf0",
+        "addressState": 5
+    },
+    "id": 1
+}
