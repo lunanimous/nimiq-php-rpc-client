@@ -42,6 +42,11 @@ class Transaction extends Model
     public $from;
 
     /**
+     * @var string user friendly address the transaction is sent from
+     */
+    public $fromAddress;
+
+    /**
      * @var int account type of the given address
      */
     public $fromType = AccountType::Basic;
@@ -50,6 +55,11 @@ class Transaction extends Model
      * @var string address the transaction is directed to
      */
     public $to;
+
+    /**
+     * @var string use friendly address the transaction is directed to
+     */
+    public $toAddress;
 
     /**
      * @var int account type of the given address
