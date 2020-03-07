@@ -5,6 +5,7 @@ namespace Lunanimous\Rpc;
 use Lunanimous\Rpc\Models\Account;
 use Lunanimous\Rpc\Models\Block;
 use Lunanimous\Rpc\Models\OutgoingTransaction;
+use Lunanimous\Rpc\Models\SyncingStatus;
 use Lunanimous\Rpc\Models\Transaction;
 use Lunanimous\Rpc\Models\TransactionReceipt;
 use Lunanimous\Rpc\Models\Wallet;
@@ -24,11 +25,17 @@ class NimiqClient extends Client
     /**
      * Returns an object with data about the sync status or false.
      *
-     * @return array|bool object with sync status data or false, when not syncing
+     * @return bool|SyncingStatus object with sync status data or false, when not syncing
      */
     public function getSyncingState()
     {
-        return $this->request('syncing');
+        $result = $this->request('syncing');
+
+        if (is_bool($result)) {
+            return $result;
+        }
+
+        return new SyncingStatus($result);
     }
 
     /**
@@ -512,7 +519,7 @@ class NimiqClient extends Client
      * @param bool   $includeTransactions if true includes full transactions,
      *                                    if false (default) includes only transaction hashes
      *
-     * @return null|array block object, or null when no block was found
+     * @return null|Block block object, or null when no block was found
      */
     public function getBlockByHash($blockHash, $includeTransactions = false)
     {
@@ -532,7 +539,7 @@ class NimiqClient extends Client
      * @param bool $includeTransactions if true includes full transactions,
      *                                  if false (default) includes only transaction hashes
      *
-     * @return null|array block object, or null when no block was found
+     * @return null|Block block object, or null when no block was found
      */
     public function getBlockByNumber($blockNumber, $includeTransactions = false)
     {

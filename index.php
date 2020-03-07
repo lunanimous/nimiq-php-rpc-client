@@ -3,6 +3,6 @@
 require 'vendor/autoload.php';
 
 $client = new \Lunanimous\Rpc\NimiqClient();
-$result = $client->getBlockByNumber(12345678);
+$result = $client->getSyncingState();
 
 var_dump($result);
