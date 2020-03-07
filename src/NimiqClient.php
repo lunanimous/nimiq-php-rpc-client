@@ -4,6 +4,7 @@ namespace Lunanimous\Rpc;
 
 use Lunanimous\Rpc\Models\Account;
 use Lunanimous\Rpc\Models\Block;
+use Lunanimous\Rpc\Models\Mempool;
 use Lunanimous\Rpc\Models\OutgoingTransaction;
 use Lunanimous\Rpc\Models\Peer;
 use Lunanimous\Rpc\Models\SyncingStatus;
@@ -11,6 +12,9 @@ use Lunanimous\Rpc\Models\Transaction;
 use Lunanimous\Rpc\Models\TransactionReceipt;
 use Lunanimous\Rpc\Models\Wallet;
 
+/**
+ * RPC Client to communicate with a Nimiq Node.
+ */
 class NimiqClient extends Client
 {
     /**
@@ -235,7 +239,7 @@ class NimiqClient extends Client
      * @param bool $includeTransactions if true includes full transactions,
      *                                  if false includes only transaction hashes
      *
-     * @return Transaction[] array of transactions (either represented by the transaction hash or a transaction object)
+     * @return string[]|Transaction[] array of transactions (either represented by the transaction hash or a transaction object)
      */
     public function getMempoolContent($includeTransactions = false)
     {
@@ -254,11 +258,13 @@ class NimiqClient extends Client
      * Returns information on the current mempool situation. This will provide an overview of the number of
      * transactions sorted into buckets based on their fee per byte (in smallest unit).
      *
-     * @return array mempool information
+     * @return Mempool mempool information
      */
     public function getMempool()
     {
-        return $this->request('mempool');
+        $result = $this->request('mempool');
+
+        return new Mempool($result);
     }
 
     /**
@@ -474,7 +480,7 @@ class NimiqClient extends Client
      *
      * @param string $address address for which to get account details
      *
-     * @return array details about the account. returns the default empty basic account for non-existing accounts.
+     * @return Account details about the account. returns the default empty basic account for non-existing accounts.
      */
     public function getAccount($address)
     {

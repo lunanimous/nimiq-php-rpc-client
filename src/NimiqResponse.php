@@ -4,6 +4,9 @@ namespace Lunanimous\Rpc;
 
 use Psr\Http\Message\ResponseInterface;
 
+/**
+ * RPC Response of the Nimiq Node.
+ */
 class NimiqResponse
 {
     /**
