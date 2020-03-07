@@ -5,6 +5,7 @@ namespace Lunanimous\Rpc;
 use Lunanimous\Rpc\Models\Account;
 use Lunanimous\Rpc\Models\Block;
 use Lunanimous\Rpc\Models\OutgoingTransaction;
+use Lunanimous\Rpc\Models\Peer;
 use Lunanimous\Rpc\Models\SyncingStatus;
 use Lunanimous\Rpc\Models\Transaction;
 use Lunanimous\Rpc\Models\TransactionReceipt;
@@ -52,11 +53,15 @@ class NimiqClient extends Client
     /**
      * Returns list of peers known to the client.
      *
-     * @return array list of peers
+     * @return Peer[] list of peers
      */
     public function getPeerList()
     {
-        return $this->request('peerList');
+        $result = $this->request('peerList');
+
+        return array_map(function ($rawPeer) {
+            return new Peer($rawPeer);
+        }, $result);
     }
 
     /**
@@ -64,7 +69,7 @@ class NimiqClient extends Client
      *
      * @param string $peer address of the peer
      *
-     * @return array current state of the peer
+     * @return Peer current state of the peer
      */
     public function getPeer($peer)
     {
@@ -78,7 +83,7 @@ class NimiqClient extends Client
      * @param string $command command to perform (one of PeerStateCommand::Connect, PeerStateCommand::Disconnect,
      *                        PeerStateCommand::Ban, PeerStateCommand::Unban)
      *
-     * @return array new state of the peer
+     * @return Peer new state of the peer
      */
     public function setPeerState(string $peer, string $command)
     {
