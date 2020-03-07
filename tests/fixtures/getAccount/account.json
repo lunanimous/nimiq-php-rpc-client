@@ -1,0 +1,10 @@
+{
+    "jsonrpc": "2.0",
+    "result": {
+        "id": "b6edcc7924af5a05af6087959c7233ec2cf1a5db",
+        "address": "NQ46 NTNU QX94 MVD0 BBT0 GXAR QUHK VGNF 39ET",
+        "balance": 1200000,
+        "type": 0
+    },
+    "id": 1
+}

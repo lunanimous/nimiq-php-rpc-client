@@ -3,6 +3,6 @@
 require 'vendor/autoload.php';
 
 $client = new \Lunanimous\Rpc\NimiqClient();
-$result = $client->getPeerCount();
+$result = $client->getSyncingState();
 
 var_dump($result);

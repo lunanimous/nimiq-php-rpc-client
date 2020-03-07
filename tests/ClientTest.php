@@ -80,7 +80,7 @@ class ClientTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($body['params'][4], ['key' => 'value']);
     }
 
-    public function testClientReturnsResponseObject()
+    public function testClientReturnsResponseResult()
     {
         $this->mock->append(new \GuzzleHttp\Psr7\Response(200, [], json_encode([
             'jsonrpc' => '2.0',

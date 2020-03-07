@@ -1,0 +1,24 @@
+{
+    "jsonrpc": "2.0",
+    "result": [
+        {
+            "id": "f925107376081be421f52d64bec775cc1fc20829",
+            "address": "NQ33 Y4JH 0UTN 10DX 88FM 5MJB VHTM RGFU 4219",
+            "balance": 0,
+            "type": 0
+        },
+        {
+            "id": "214a7e166c4a348f1a3085e33317bc2fe401ad5d",
+            "address": "NQ82 4557 U5KC 98S8 X6HG GPHK 65VU 5YJ0 3BAV",
+            "balance": 0,
+            "type": 0
+        },
+        {
+            "id": "b7cc7f01e0e6f0e07dd9249dc598f4e5ee8801f5",
+            "address": "NQ39 NY67 X0F0 UTQE 0YER 4JEU B67L UPP8 G0FM",
+            "balance": 0,
+            "type": 0
+        }
+    ],
+    "id": 1
+}

@@ -66,7 +66,7 @@ class Client
     {
         $originalResponse = $this->client->post($this->path, $this->makeJson($method, $params));
 
-        $response = new Response($originalResponse);
+        $response = new NimiqResponse($originalResponse);
 
         if ($response->hasError()) {
             throw new BadMethodCallException($response->getError()['message'], $response->getError()['code']);
@@ -95,7 +95,7 @@ class Client
             return $this->config['ca'];
         }
 
-        return false;
+        return null;
     }
 
     /**

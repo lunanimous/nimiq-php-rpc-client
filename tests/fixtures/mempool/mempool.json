@@ -1,0 +1,9 @@
+{
+    "jsonrpc": "2.0",
+    "result": {
+        "1": 3,
+        "buckets": [1],
+        "total": 3
+    },
+    "id": 1
+}

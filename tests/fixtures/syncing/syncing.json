@@ -1,0 +1,9 @@
+{
+    "jsonrpc": "2.0",
+    "result": {
+        "startingBlock": 578430,
+        "currentBlock": 586493,
+        "highestBlock": 586493
+    },
+    "id": 1
+}
