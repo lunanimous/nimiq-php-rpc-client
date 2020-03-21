@@ -891,6 +891,20 @@ class NimiqClientTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(5, $result);
     }
 
+    public function testSetLogLevel()
+    {
+        $this->appendNextResponse('log/log.json');
+
+        $result = $this->client->setLogLevel('*', 'verbose');
+
+        $body = $this->getLastRequestBody();
+        $this->assertEquals('log', $body['method']);
+        $this->assertEquals('*', $body['params'][0]);
+        $this->assertEquals('verbose', $body['params'][1]);
+
+        $this->assertTrue($result);
+    }
+
     private function appendNextResponse($fixture)
     {
         $jsonResponse = file_get_contents(dirname(__FILE__).'/fixtures/'.$fixture);
