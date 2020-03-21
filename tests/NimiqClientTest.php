@@ -5,10 +5,12 @@ use Lunanimous\Rpc\Constants\AddressState;
 use Lunanimous\Rpc\Constants\ConnectionState;
 use Lunanimous\Rpc\Constants\ConsensusState;
 use Lunanimous\Rpc\Constants\PeerStateCommand;
+use Lunanimous\Rpc\Models\Account;
 use Lunanimous\Rpc\Models\Mempool;
 use Lunanimous\Rpc\Models\OutgoingTransaction;
 use Lunanimous\Rpc\Models\Peer;
 use Lunanimous\Rpc\Models\Transaction;
+use Lunanimous\Rpc\Models\Wallet;
 use Lunanimous\Rpc\NimiqClient;
 
 /**
@@ -599,6 +601,70 @@ class NimiqClientTest extends \PHPUnit\Framework\TestCase
     public function submitBlock()
     {
         $this->assertTrue(false);
+    }
+
+    public function testGetAccounts()
+    {
+        $this->appendNextResponse('accounts/accounts.json');
+
+        $result = $this->client->getAccounts();
+
+        $body = $this->getLastRequestBody();
+        $this->assertEquals($body['method'], 'accounts');
+
+        $this->assertCount(3, $result);
+        $this->assertInstanceOf(Account::class, $result[0]);
+        $this->assertEquals($result[0]->address, 'NQ33 Y4JH 0UTN 10DX 88FM 5MJB VHTM RGFU 4219');
+        $this->assertInstanceOf(Account::class, $result[1]);
+        $this->assertEquals($result[1]->address, 'NQ82 4557 U5KC 98S8 X6HG GPHK 65VU 5YJ0 3BAV');
+        $this->assertInstanceOf(Account::class, $result[2]);
+        $this->assertEquals($result[2]->address, 'NQ39 NY67 X0F0 UTQE 0YER 4JEU B67L UPP8 G0FM');
+    }
+
+    public function testCreateAccount()
+    {
+        $this->appendNextResponse('createAccount/new-account.json');
+
+        $result = $this->client->createAccount();
+
+        $body = $this->getLastRequestBody();
+        $this->assertEquals($body['method'], 'createAccount');
+
+        $this->assertInstanceOf(Wallet::class, $result);
+        $this->assertEquals('b6edcc7924af5a05af6087959c7233ec2cf1a5db', $result->id);
+        $this->assertEquals('NQ46 NTNU QX94 MVD0 BBT0 GXAR QUHK VGNF 39ET', $result->address);
+        $this->assertEquals('4f6d35cc47b77bf696b6cce72217e52edff972855bd17396b004a8453b020747', $result->publicKey);
+    }
+
+    public function testGetBalance()
+    {
+        $this->appendNextResponse('getBalance/balance.json');
+
+        $result = $this->client->getBalance('NQ46 NTNU QX94 MVD0 BBT0 GXAR QUHK VGNF 39ET');
+
+        $body = $this->getLastRequestBody();
+        $this->assertEquals($body['method'], 'getBalance');
+        $this->assertEquals($body['params'][0], 'NQ46 NTNU QX94 MVD0 BBT0 GXAR QUHK VGNF 39ET');
+
+        $this->assertIsInt($result);
+        $this->assertEquals($result, 1200000);
+    }
+
+    public function testGetAccount()
+    {
+        $this->appendNextResponse('getAccount/account.json');
+
+        $result = $this->client->getAccount('NQ46 NTNU QX94 MVD0 BBT0 GXAR QUHK VGNF 39ET');
+
+        $body = $this->getLastRequestBody();
+        $this->assertEquals($body['method'], 'getAccount');
+        $this->assertEquals($body['params'][0], 'NQ46 NTNU QX94 MVD0 BBT0 GXAR QUHK VGNF 39ET');
+
+        $this->assertInstanceOf(Account::class, $result);
+        $this->assertEquals('b6edcc7924af5a05af6087959c7233ec2cf1a5db', $result->id);
+        $this->assertEquals('NQ46 NTNU QX94 MVD0 BBT0 GXAR QUHK VGNF 39ET', $result->address);
+        $this->assertEquals(1200000, $result->balance);
+        $this->assertEquals(AccountType::Basic, $result->type);
     }
 
     private function appendNextResponse($fixture)
