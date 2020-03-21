@@ -18,6 +18,18 @@ use Lunanimous\Rpc\Models\Wallet;
 class NimiqClient extends Client
 {
     /**
+     * Creates a new instance of the Nimiq client.
+     *
+     * @param array $config client config array (optional)
+     *
+     * @return NimiqClient new client instance
+     */
+    public function __construct($config = [])
+    {
+        parent::__construct($config);
+    }
+
+    /**
      * Returns number of peers currently connected to the client.
      *
      * @return int number of connected peers
