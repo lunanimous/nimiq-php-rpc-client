@@ -93,7 +93,9 @@ class NimiqClient extends Client
      */
     public function setPeerState(string $peer, string $command)
     {
-        return $this->request('peerState', $peer, $command);
+        $result = $this->request('peerState', $peer, $command);
+
+        return new Peer($result);
     }
 
     /**

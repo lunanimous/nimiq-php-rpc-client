@@ -3,6 +3,7 @@
 use Lunanimous\Rpc\Constants\AddressState;
 use Lunanimous\Rpc\Constants\ConnectionState;
 use Lunanimous\Rpc\Constants\ConsensusState;
+use Lunanimous\Rpc\Constants\PeerStateCommand;
 use Lunanimous\Rpc\Models\Peer;
 use Lunanimous\Rpc\NimiqClient;
 
@@ -157,6 +158,24 @@ class NimiqClientTest extends \PHPUnit\Framework\TestCase
         $this->appendNextResponse('peerState/error.json');
 
         $result = $this->client->getPeer('unknown');
+    }
+
+    public function testSetPeerState()
+    {
+        $this->appendNextResponse('peerState/normal.json');
+
+        $result = $this->client->setPeerState('wss://seed1.nimiq-testnet.com:8080/b99034c552e9c0fd34eb95c1cdf17f5e', PeerStateCommand::Connect);
+
+        $body = $this->getLastRequestBody();
+        $this->assertEquals($body['method'], 'peerState');
+        $this->assertEquals($body['params'][0], 'wss://seed1.nimiq-testnet.com:8080/b99034c552e9c0fd34eb95c1cdf17f5e');
+        $this->assertEquals($body['params'][1], 'connect');
+
+        $this->assertInstanceOf(Peer::class, $result);
+        $this->assertEquals($result->id, 'b99034c552e9c0fd34eb95c1cdf17f5e');
+        $this->assertEquals($result->address, 'wss://seed1.nimiq-testnet.com:8080/b99034c552e9c0fd34eb95c1cdf17f5e');
+        $this->assertEquals($result->addressState, AddressState::Established);
+        $this->assertEquals($result->connectionState, ConnectionState::Established);
     }
 
     private function appendNextResponse($fixture)
