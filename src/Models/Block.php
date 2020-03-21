@@ -40,6 +40,21 @@ class Block extends Model
     public $accountsHash;
 
     /**
+     * @var string block difficulty, encoded as decimal number in string
+     */
+    public $difficulty;
+
+    /**
+     * @var int UNIX timestamp of the block
+     */
+    public $timestamp;
+
+    /**
+     * @var int number of confirmations
+     */
+    public $confirmations;
+
+    /**
      * @var string hex-encoded 20 byte address of the miner of the block
      */
     public $miner;
@@ -50,11 +65,6 @@ class Block extends Model
     public $minerAddress;
 
     /**
-     * @var string block difficulty, encoded as decimal number in string
-     */
-    public $difficulty;
-
-    /**
      * @var string hex-encoded value of the extra data field, maximum of 255 bytes
      */
     public $extraData;
@@ -63,11 +73,6 @@ class Block extends Model
      * @var int block size in byte
      */
     public $size;
-
-    /**
-     * @var int UNIX timestamp of the block
-     */
-    public $timestamp;
 
     /**
      * @var string[]|Transaction[] array of transactions, either represented by the transaction hash or a

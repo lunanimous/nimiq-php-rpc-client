@@ -512,7 +512,7 @@ class NimiqClient extends Client
      */
     public function getBlockTransactionCountByHash($blockHash)
     {
-        return $this->request('getBlockTransactionCountByHash');
+        return $this->request('getBlockTransactionCountByHash', $blockHash);
     }
 
     /**
@@ -524,7 +524,7 @@ class NimiqClient extends Client
      */
     public function getBlockTransactionCountByNumber($blockNumber)
     {
-        return $this->request('getBlockTransactionCountByNumber');
+        return $this->request('getBlockTransactionCountByNumber', $blockNumber);
     }
 
     /**

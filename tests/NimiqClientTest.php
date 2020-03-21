@@ -6,6 +6,7 @@ use Lunanimous\Rpc\Constants\ConnectionState;
 use Lunanimous\Rpc\Constants\ConsensusState;
 use Lunanimous\Rpc\Constants\PeerStateCommand;
 use Lunanimous\Rpc\Models\Account;
+use Lunanimous\Rpc\Models\Block;
 use Lunanimous\Rpc\Models\Mempool;
 use Lunanimous\Rpc\Models\OutgoingTransaction;
 use Lunanimous\Rpc\Models\Peer;
@@ -665,6 +666,185 @@ class NimiqClientTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('NQ46 NTNU QX94 MVD0 BBT0 GXAR QUHK VGNF 39ET', $result->address);
         $this->assertEquals(1200000, $result->balance);
         $this->assertEquals(AccountType::Basic, $result->type);
+    }
+
+    public function testGetBlockNumber()
+    {
+        $this->appendNextResponse('blockNumber/blockHeight.json');
+
+        $result = $this->client->getBlockNumber();
+
+        $body = $this->getLastRequestBody();
+        $this->assertEquals('blockNumber', $body['method']);
+
+        $this->assertIsInt($result);
+        $this->assertEquals(748883, $result);
+    }
+
+    public function testGetBlockTransactionCountByHash()
+    {
+        $this->appendNextResponse('blockTransactionCount/found.json');
+
+        $result = $this->client->getBlockTransactionCountByHash('bc3945d22c9f6441409a6e539728534a4fc97859bda87333071fad9dad942786');
+
+        $body = $this->getLastRequestBody();
+        $this->assertEquals('getBlockTransactionCountByHash', $body['method']);
+        $this->assertEquals('bc3945d22c9f6441409a6e539728534a4fc97859bda87333071fad9dad942786', $body['params'][0]);
+
+        $this->assertIsInt($result);
+        $this->assertEquals(2, $result);
+    }
+
+    public function testGetBlockTransactionCountByHashWhenNotFound()
+    {
+        $this->appendNextResponse('blockTransactionCount/not-found.json');
+
+        $result = $this->client->getBlockTransactionCountByHash('bc3945d22c9f6441409a6e539728534a4fc97859bda87333071fad9dad942786');
+
+        $body = $this->getLastRequestBody();
+        $this->assertEquals('getBlockTransactionCountByHash', $body['method']);
+        $this->assertEquals('bc3945d22c9f6441409a6e539728534a4fc97859bda87333071fad9dad942786', $body['params'][0]);
+
+        $this->assertEquals(null, $result);
+    }
+
+    public function testGetBlockTransactionCountByNumber()
+    {
+        $this->appendNextResponse('blockTransactionCount/found.json');
+
+        $result = $this->client->getBlockTransactionCountByNumber(11608);
+
+        $body = $this->getLastRequestBody();
+        $this->assertEquals('getBlockTransactionCountByNumber', $body['method']);
+        $this->assertEquals(11608, $body['params'][0]);
+
+        $this->assertIsInt($result);
+        $this->assertEquals(2, $result);
+    }
+
+    public function testGetBlockTransactionCountByNumberWhenNotFound()
+    {
+        $this->appendNextResponse('blockTransactionCount/not-found.json');
+
+        $result = $this->client->getBlockTransactionCountByNumber(11608);
+
+        $body = $this->getLastRequestBody();
+        $this->assertEquals('getBlockTransactionCountByNumber', $body['method']);
+        $this->assertEquals(11608, $body['params'][0]);
+
+        $this->assertEquals(null, $result);
+    }
+
+    public function testGetBlockByHash()
+    {
+        $this->appendNextResponse('getBlock/block-found.json');
+
+        $result = $this->client->getBlockByHash('bc3945d22c9f6441409a6e539728534a4fc97859bda87333071fad9dad942786');
+
+        $body = $this->getLastRequestBody();
+        $this->assertEquals('getBlockByHash', $body['method']);
+        $this->assertEquals('bc3945d22c9f6441409a6e539728534a4fc97859bda87333071fad9dad942786', $body['params'][0]);
+        $this->assertEquals(false, $body['params'][1]);
+
+        $this->assertInstanceOf(Block::class, $result);
+        $this->assertEquals(11608, $result->number);
+        $this->assertEquals('bc3945d22c9f6441409a6e539728534a4fc97859bda87333071fad9dad942786', $result->hash);
+        $this->assertEquals(739224, $result->confirmations);
+        $this->assertEquals([
+            '78957b87ab5546e11e9540ce5a37ebbf93a0ebd73c0ce05f137288f30ee9f430',
+            'fd8e46ae55c5b8cd7cb086cf8d6c81f941a516d6148021d55f912fb2ca75cc8e',
+        ], $result->transactions);
+    }
+
+    public function testGetBlockByHashWithTransactions()
+    {
+        $this->appendNextResponse('getBlock/block-with-transactions.json');
+
+        $result = $this->client->getBlockByHash('bc3945d22c9f6441409a6e539728534a4fc97859bda87333071fad9dad942786', true);
+
+        $body = $this->getLastRequestBody();
+        $this->assertEquals('getBlockByHash', $body['method']);
+        $this->assertEquals('bc3945d22c9f6441409a6e539728534a4fc97859bda87333071fad9dad942786', $body['params'][0]);
+        $this->assertEquals(true, $body['params'][1]);
+
+        $this->assertInstanceOf(Block::class, $result);
+        $this->assertEquals(11608, $result->number);
+        $this->assertEquals('bc3945d22c9f6441409a6e539728534a4fc97859bda87333071fad9dad942786', $result->hash);
+        $this->assertEquals(739501, $result->confirmations);
+
+        $this->assertCount(2, $result->transactions);
+        $this->assertInstanceOf(Transaction::class, $result->transactions[0]);
+        $this->assertInstanceOf(Transaction::class, $result->transactions[1]);
+    }
+
+    public function testGetBlockByHashNotFound()
+    {
+        $this->appendNextResponse('getBlock/block-not-found.json');
+
+        $result = $this->client->getBlockByHash('bc3945d22c9f6441409a6e539728534a4fc97859bda87333071fad9dad942786');
+
+        $body = $this->getLastRequestBody();
+        $this->assertEquals('getBlockByHash', $body['method']);
+        $this->assertEquals('bc3945d22c9f6441409a6e539728534a4fc97859bda87333071fad9dad942786', $body['params'][0]);
+        $this->assertEquals(false, $body['params'][1]);
+
+        $this->assertNull($result);
+    }
+
+    public function testGetBlockByNumber()
+    {
+        $this->appendNextResponse('getBlock/block-found.json');
+
+        $result = $this->client->getBlockByNumber(11608);
+
+        $body = $this->getLastRequestBody();
+        $this->assertEquals('getBlockByNumber', $body['method']);
+        $this->assertEquals(11608, $body['params'][0]);
+        $this->assertEquals(false, $body['params'][1]);
+
+        $this->assertInstanceOf(Block::class, $result);
+        $this->assertEquals(11608, $result->number);
+        $this->assertEquals('bc3945d22c9f6441409a6e539728534a4fc97859bda87333071fad9dad942786', $result->hash);
+        $this->assertEquals(739224, $result->confirmations);
+        $this->assertEquals([
+            '78957b87ab5546e11e9540ce5a37ebbf93a0ebd73c0ce05f137288f30ee9f430',
+            'fd8e46ae55c5b8cd7cb086cf8d6c81f941a516d6148021d55f912fb2ca75cc8e',
+        ], $result->transactions);
+    }
+
+    public function testGetBlockByNumberWithTransactions()
+    {
+        $this->appendNextResponse('getBlock/block-with-transactions.json');
+
+        $result = $this->client->getBlockByNumber(11608, true);
+
+        $body = $this->getLastRequestBody();
+        $this->assertEquals('getBlockByNumber', $body['method']);
+        $this->assertEquals(11608, $body['params'][0]);
+        $this->assertEquals(true, $body['params'][1]);
+
+        $this->assertInstanceOf(Block::class, $result);
+        $this->assertEquals(11608, $result->number);
+        $this->assertEquals('bc3945d22c9f6441409a6e539728534a4fc97859bda87333071fad9dad942786', $result->hash);
+        $this->assertEquals(739501, $result->confirmations);
+
+        $this->assertCount(2, $result->transactions);
+        $this->assertInstanceOf(Transaction::class, $result->transactions[0]);
+        $this->assertInstanceOf(Transaction::class, $result->transactions[1]);
+    }
+
+    public function testGetBlockByNumberNotFound()
+    {
+        $this->appendNextResponse('getBlock/block-not-found.json');
+
+        $result = $this->client->getBlockByNumber(11608);
+
+        $body = $this->getLastRequestBody();
+        $this->assertEquals('getBlockByNumber', $body['method']);
+        $this->assertEquals(11608, $body['params'][0]);
+        $this->assertEquals(false, $body['params'][1]);
+
+        $this->assertNull($result);
     }
 
     private function appendNextResponse($fixture)
