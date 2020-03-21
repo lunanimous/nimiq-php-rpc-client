@@ -1,4 +1,13 @@
-/vendor/
-/coverage/
+.DS_Store
+Thumbs.db
+/.idea
+/.vscode
+
+/vendor
+/coverage
+/build
+composer.phar
+composer.lock
 .phpunit.result.cache
 sample.php
+phpDocumentor.phar

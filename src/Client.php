@@ -5,6 +5,11 @@ namespace Lunanimous\Rpc;
 use BadMethodCallException;
 use GuzzleHttp\Client as GuzzleHttp;
 
+/**
+ * Generic RPC client.
+ *
+ * @internal
+ */
 class Client
 {
     /**

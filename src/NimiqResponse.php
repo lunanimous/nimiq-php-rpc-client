@@ -6,6 +6,8 @@ use Psr\Http\Message\ResponseInterface;
 
 /**
  * RPC Response of the Nimiq Node.
+ *
+ * @internal
  */
 class NimiqResponse
 {
