@@ -113,8 +113,7 @@ NimiqClient::getConsensusState(  ): string
 
 **Return Value:**
 
-string describing the consensus state. ConsensusState::Established is the value for a good state, other
-               values indicate bad state.
+string describing the consensus state. ConsensusState::Established is the value for a good state, other values indicate bad state.
 
 
 
@@ -182,8 +181,7 @@ NimiqClient::setPeerState( string $peer, string $command ): \Lunanimous\Rpc\Mode
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | `$peer` | **string** | address of the peer |
-| `$command` | **string** | command to perform (one of PeerStateCommand::Connect, PeerStateCommand::Disconnect,
-                       PeerStateCommand::Ban, PeerStateCommand::Unban) |
+| `$command` | **string** | command to perform (one of PeerStateCommand::Connect, PeerStateCommand::Disconnect, PeerStateCommand::Ban, PeerStateCommand::Unban) |
 
 
 **Return Value:**
@@ -448,8 +446,7 @@ NimiqClient::getMempoolContent( boolean $includeTransactions = false ): array&lt
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| `$includeTransactions` | **boolean** | if true includes full transactions,
-                                 if false includes only transaction hashes |
+| `$includeTransactions` | **boolean** | if true includes full transactions, if false includes only transaction hashes |
 
 
 **Return Value:**
@@ -760,10 +757,8 @@ NimiqClient::getWork( string $address = null, string $extraDataHex = null ): arr
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| `$address` | **string** | address to use as a miner for this block. this overrides the address provided
-                            during startup or from the pool. |
-| `$extraDataHex` | **string** | hex-encoded value for the extra data field. this overrides the address provided
-                            during startup or from the pool. |
+| `$address` | **string** | address to use as a miner for this block. this overrides the address provided during startup or from the pool. |
+| `$extraDataHex` | **string** | hex-encoded value for the extra data field. this overrides the address provided during startup or from the pool. |
 
 
 **Return Value:**
@@ -790,10 +785,8 @@ NimiqClient::getBlockTemplate( string $address = null, string $extraDataHex = nu
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| `$address` | **string** | address to use as a miner for this block. this overrides the address provided
-                            during startup or from the pool. |
-| `$extraDataHex` | **string** | hex-encoded value for the extra data field. this overrides the address provided
-                            during startup or from the pool. |
+| `$address` | **string** | address to use as a miner for this block. this overrides the address provided during startup or from the pool. |
+| `$extraDataHex` | **string** | hex-encoded value for the extra data field. this overrides the address provided during startup or from the pool. |
 
 
 **Return Value:**
@@ -819,8 +812,7 @@ NimiqClient::submitBlock( string $blockHex )
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| `$blockHex` | **string** | hex-encoded full block (including header, interlink and body). when submitting work
-                        from getWork, remember to include the suffix. |
+| `$blockHex` | **string** | hex-encoded full block (including header, interlink and body). when submitting work from getWork, remember to include the suffix. |
 
 
 
@@ -1007,8 +999,7 @@ NimiqClient::getBlockByHash( string $blockHash, boolean $includeTransactions = f
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | `$blockHash` | **string** | hash of the block to gather information on |
-| `$includeTransactions` | **boolean** | if true includes full transactions,
-                                   if false (default) includes only transaction hashes |
+| `$includeTransactions` | **boolean** | if true includes full transactions, if false (default) includes only transaction hashes |
 
 
 **Return Value:**
@@ -1035,8 +1026,7 @@ NimiqClient::getBlockByNumber( integer $blockNumber, boolean $includeTransaction
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | `$blockNumber` | **integer** | height of the block to gather information on |
-| `$includeTransactions` | **boolean** | if true includes full transactions,
-                                 if false (default) includes only transaction hashes |
+| `$includeTransactions` | **boolean** | if true includes full transactions, if false (default) includes only transaction hashes |
 
 
 **Return Value:**

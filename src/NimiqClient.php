@@ -46,8 +46,7 @@ class NimiqClient extends Client
     /**
      * Returns information on the current consensus state.
      *
-     * @return string string describing the consensus state. ConsensusState::Established is the value for a good state, other
-     *                values indicate bad state.
+     * @return string string describing the consensus state. ConsensusState::Established is the value for a good state, other values indicate bad state.
      */
     public function getConsensusState()
     {
@@ -86,8 +85,7 @@ class NimiqClient extends Client
      * Sets the state of the peer.
      *
      * @param string $peer    address of the peer
-     * @param string $command command to perform (one of PeerStateCommand::Connect, PeerStateCommand::Disconnect,
-     *                        PeerStateCommand::Ban, PeerStateCommand::Unban)
+     * @param string $command command to perform (one of PeerStateCommand::Connect, PeerStateCommand::Disconnect, PeerStateCommand::Ban, PeerStateCommand::Unban)
      *
      * @return Peer new state of the peer
      */
@@ -244,8 +242,7 @@ class NimiqClient extends Client
     /**
      * Returns transactions that are currently in the mempool.
      *
-     * @param bool $includeTransactions if true includes full transactions,
-     *                                  if false includes only transaction hashes
+     * @param bool $includeTransactions if true includes full transactions, if false includes only transaction hashes
      *
      * @return string[]|Transaction[] array of transactions (either represented by the transaction hash or a transaction object)
      */
@@ -406,10 +403,8 @@ class NimiqClient extends Client
     /**
      * Returns instructions to mine the next block. This will consider pool instructions when connected to a pool.
      *
-     * @param string $address      address to use as a miner for this block. this overrides the address provided
-     *                             during startup or from the pool.
-     * @param string $extraDataHex hex-encoded value for the extra data field. this overrides the address provided
-     *                             during startup or from the pool.
+     * @param string $address      address to use as a miner for this block. this overrides the address provided during startup or from the pool.
+     * @param string $extraDataHex hex-encoded value for the extra data field. this overrides the address provided during startup or from the pool.
      *
      * @return array mining work instructions
      */
@@ -422,10 +417,8 @@ class NimiqClient extends Client
      * Returns a template to build the next block for mining. This will consider pool instructions when connected
      * to a pool.
      *
-     * @param string $address      address to use as a miner for this block. this overrides the address provided
-     *                             during startup or from the pool.
-     * @param string $extraDataHex hex-encoded value for the extra data field. this overrides the address provided
-     *                             during startup or from the pool.
+     * @param string $address      address to use as a miner for this block. this overrides the address provided during startup or from the pool.
+     * @param string $extraDataHex hex-encoded value for the extra data field. this overrides the address provided during startup or from the pool.
      *
      * @return array mining block template
      */
@@ -437,8 +430,7 @@ class NimiqClient extends Client
     /**
      * Submits a block to the node. When the block is valid, the node will forward it to other nodes in the network.
      *
-     * @param string $blockHex hex-encoded full block (including header, interlink and body). when submitting work
-     *                         from getWork, remember to include the suffix.
+     * @param string $blockHex hex-encoded full block (including header, interlink and body). when submitting work from getWork, remember to include the suffix.
      */
     public function submitBlock($blockHex)
     {
@@ -535,8 +527,7 @@ class NimiqClient extends Client
      * Returns information about a block by hash.
      *
      * @param string $blockHash           hash of the block to gather information on
-     * @param bool   $includeTransactions if true includes full transactions,
-     *                                    if false (default) includes only transaction hashes
+     * @param bool   $includeTransactions if true includes full transactions, if false (default) includes only transaction hashes
      *
      * @return null|Block block object, or null when no block was found
      */
@@ -555,8 +546,7 @@ class NimiqClient extends Client
      * Returns information about a block by block number.
      *
      * @param int  $blockNumber         height of the block to gather information on
-     * @param bool $includeTransactions if true includes full transactions,
-     *                                  if false (default) includes only transaction hashes
+     * @param bool $includeTransactions if true includes full transactions, if false (default) includes only transaction hashes
      *
      * @return null|Block block object, or null when no block was found
      */
