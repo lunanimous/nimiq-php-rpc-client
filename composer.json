@@ -1,5 +1,5 @@
 {
-    "name": "lunanimous/rpc",
+    "name": "lunanimous/php-rpc-client",
     "description": "Nimiq RPC Client for PHP",
     "type": "library",
     "license": "MIT",
