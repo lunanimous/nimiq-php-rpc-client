@@ -442,6 +442,33 @@ class NimiqClientTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($result->transactionsPerBucket, []);
     }
 
+    public function testGetMinFeePerByte()
+    {
+        $this->appendNextResponse('minFeePerByte/fee.json');
+
+        $result = $this->client->getMinFeePerByte();
+
+        $body = $this->getLastRequestBody();
+        $this->assertEquals($body['method'], 'minFeePerByte');
+
+        $this->assertIsInt($result);
+        $this->assertEquals($result, 0);
+    }
+
+    public function testSetMinFeePerByte()
+    {
+        $this->appendNextResponse('minFeePerByte/fee.json');
+
+        $result = $this->client->setMinFeePerByte(0);
+
+        $body = $this->getLastRequestBody();
+        $this->assertEquals($body['method'], 'minFeePerByte');
+        $this->assertEquals($body['params'][0], 0);
+
+        $this->assertIsInt($result);
+        $this->assertEquals($result, 0);
+    }
+
     private function appendNextResponse($fixture)
     {
         $jsonResponse = file_get_contents(dirname(__FILE__).'/fixtures/'.$fixture);
