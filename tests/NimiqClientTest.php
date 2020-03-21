@@ -666,17 +666,81 @@ class NimiqClientTest extends \PHPUnit\Framework\TestCase
 
     public function testGetWork()
     {
-        $this->assertTrue(false);
+        $this->appendNextResponse('getWork/work.json');
+
+        $result = $this->client->getWork();
+
+        $body = $this->getLastRequestBody();
+        $this->assertEquals('getWork', $body['method']);
+
+        $this->assertEquals('00015a7d47ddf5152a7d06a14ea291831c3fc7af20b88240c5ae839683021bcee3e279877b3de0da8ce8878bf225f6782a2663eff9a03478c15ba839fde9f1dc3dd9e5f0cd4dbc96a30130de130eb52d8160e9197e2ccf435d8d24a09b518a5e05da87a8658ed8c02531f66a7d31757b08c88d283654ed477e5e2fec21a7ca8449241e00d620000dc2fa5e763bda00000000', $result['data']);
+        $this->assertEquals('11fad9806b8b4167517c162fa113c09606b44d24f8020804a0f756db085546ff585adfdedad9085d36527a8485b497728446c35b9b6c3db263c07dd0a1f487b1639aa37ff60ba3cf6ed8ab5146fee50a23ebd84ea37dca8c49b31e57d05c9e6c57f09a3b282b71ec2be66c1bc8268b5326bb222b11a0d0a4acd2a93c9e8a8713fe4383e9d5df3b1bf008c535281086b2bcc20e494393aea1475a5c3f13673de2cf7314d201b7cc7f01e0e6f0e07dd9249dc598f4e5ee8801f50000000000', $result['suffix']);
+        $this->assertEquals(503371296, $result['target']);
+        $this->assertEquals('nimiq-argon2', $result['algorithm']);
+    }
+
+    public function testGetWorkWithOverride()
+    {
+        $this->appendNextResponse('getWork/work.json');
+
+        $result = $this->client->getWork('NQ46 NTNU QX94 MVD0 BBT0 GXAR QUHK VGNF 39ET', '');
+
+        $body = $this->getLastRequestBody();
+        $this->assertEquals('getWork', $body['method']);
+        $this->assertEquals('NQ46 NTNU QX94 MVD0 BBT0 GXAR QUHK VGNF 39ET', $body['params'][0]);
+        $this->assertEquals('', $body['params'][1]);
+
+        $this->assertEquals('00015a7d47ddf5152a7d06a14ea291831c3fc7af20b88240c5ae839683021bcee3e279877b3de0da8ce8878bf225f6782a2663eff9a03478c15ba839fde9f1dc3dd9e5f0cd4dbc96a30130de130eb52d8160e9197e2ccf435d8d24a09b518a5e05da87a8658ed8c02531f66a7d31757b08c88d283654ed477e5e2fec21a7ca8449241e00d620000dc2fa5e763bda00000000', $result['data']);
+        $this->assertEquals('11fad9806b8b4167517c162fa113c09606b44d24f8020804a0f756db085546ff585adfdedad9085d36527a8485b497728446c35b9b6c3db263c07dd0a1f487b1639aa37ff60ba3cf6ed8ab5146fee50a23ebd84ea37dca8c49b31e57d05c9e6c57f09a3b282b71ec2be66c1bc8268b5326bb222b11a0d0a4acd2a93c9e8a8713fe4383e9d5df3b1bf008c535281086b2bcc20e494393aea1475a5c3f13673de2cf7314d201b7cc7f01e0e6f0e07dd9249dc598f4e5ee8801f50000000000', $result['suffix']);
+        $this->assertEquals(503371296, $result['target']);
+        $this->assertEquals('nimiq-argon2', $result['algorithm']);
     }
 
     public function testGetBlockTemplate()
     {
-        $this->assertTrue(false);
+        $this->appendNextResponse('getWork/block-template.json');
+
+        $result = $this->client->getBlockTemplate();
+
+        $body = $this->getLastRequestBody();
+        $this->assertEquals('getBlockTemplate', $body['method']);
+
+        $this->assertEquals(901883, $result['header']['height']);
+        $this->assertEquals(503371226, $result['target']);
+        $this->assertEquals('17e250f1977ae85bdbe09468efef83587885419ee1074ddae54d3fb5a96e1f54', $result['body']['hash']);
+    }
+
+    public function testGetBlockTemplateWithOverride()
+    {
+        $this->appendNextResponse('getWork/block-template.json');
+
+        $result = $this->client->getBlockTemplate('NQ46 NTNU QX94 MVD0 BBT0 GXAR QUHK VGNF 39ET', '');
+
+        $body = $this->getLastRequestBody();
+        $this->assertEquals('getBlockTemplate', $body['method']);
+        $this->assertEquals('NQ46 NTNU QX94 MVD0 BBT0 GXAR QUHK VGNF 39ET', $body['params'][0]);
+        $this->assertEquals('', $body['params'][1]);
+
+        $this->assertEquals(901883, $result['header']['height']);
+        $this->assertEquals(503371226, $result['target']);
+        $this->assertEquals('17e250f1977ae85bdbe09468efef83587885419ee1074ddae54d3fb5a96e1f54', $result['body']['hash']);
     }
 
     public function testSubmitBlock()
     {
-        $this->assertTrue(false);
+        $this->appendNextResponse('submitBlock/submit.json');
+
+        $blockHex = '0001000000000000000000000000000000000000000000'
+            .'00000000000000000000000000000000000000000000000000000000000000000000000000000000'
+            .'000000f6ba2bbf7e1478a209057000471d73fbdc28df0b717747d929cfde829c4120f62e02da3d16'
+            .'2e20fa982029dbde9cc20f6b431ab05df1764f34af4c62a4f2b33f1f010000000000015ac3185f00'
+            .'0134990001000000000000000000000000000000000000000007546573744e657400000000';
+
+        $this->client->submitBlock($blockHex);
+
+        $body = $this->getLastRequestBody();
+        $this->assertEquals('submitBlock', $body['method']);
+        $this->assertEquals($blockHex, $body['params'][0]);
     }
 
     public function testGetAccounts()

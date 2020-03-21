@@ -409,7 +409,7 @@ class NimiqClient extends Client
      *
      * @return array mining work instructions
      */
-    public function getWork($address, $extraDataHex)
+    public function getWork($address = null, $extraDataHex = null)
     {
         return $this->request('getWork', $address, $extraDataHex);
     }
@@ -425,7 +425,7 @@ class NimiqClient extends Client
      *
      * @return array mining block template
      */
-    public function getBlockTemplate($address, $extraDataHex)
+    public function getBlockTemplate($address = null, $extraDataHex = null)
     {
         return $this->request('getBlockTemplate', $address, $extraDataHex);
     }
@@ -438,7 +438,7 @@ class NimiqClient extends Client
      */
     public function submitBlock($blockHex)
     {
-        return $this->request('submitBlock', $blockHex);
+        $this->request('submitBlock', $blockHex);
     }
 
     /**

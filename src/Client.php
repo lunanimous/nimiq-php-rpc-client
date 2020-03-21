@@ -72,7 +72,9 @@ class Client
             throw new BadMethodCallException($response->getError()['message'], $response->getError()['code']);
         }
 
-        return $response->getResult();
+        if ($response->hasResult()) {
+            return $response->getResult();
+        }
     }
 
     /**
