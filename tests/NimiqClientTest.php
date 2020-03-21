@@ -182,6 +182,11 @@ class NimiqClientTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($result->connectionState, ConnectionState::Established);
     }
 
+    public function testSendRawTransaction()
+    {
+        $this->assertTrue(false);
+    }
+
     public function testCreateRawTransaction()
     {
         $this->appendNextResponse('createRawTransaction/basic.json');
@@ -211,6 +216,11 @@ class NimiqClientTest extends \PHPUnit\Framework\TestCase
         ]);
 
         $this->assertEquals($result, '00c3c0d1af80b84c3b3de4e3d79d5c8cc950e044098c969953d68bf9cee68d7b53305dbaac7514a06dae935e40d599caf1bd8a243c00000000000186a00000000000000001000af84c01239b16cee089836c2af5c7b1dbb22cdc0b4864349f7f3805909aa8cf24e4c1ff0461832e86f3624778a867d5f2ba318f92918ada7ae28d70d40c4ef1d6413802');
+    }
+
+    public function testSendTransaction()
+    {
+        $this->assertTrue(false);
     }
 
     public function testGetRawTransactionInfo()
@@ -494,6 +504,86 @@ class NimiqClientTest extends \PHPUnit\Framework\TestCase
 
         $this->assertIsBool($result);
         $this->assertEquals($result, false);
+    }
+
+    public function testGetHashrate()
+    {
+        $this->appendNextResponse('hashrate/hashrate.json');
+
+        $result = $this->client->getHashrate();
+
+        $body = $this->getLastRequestBody();
+        $this->assertEquals($body['method'], 'hashrate');
+
+        $this->assertIsFloat($result);
+        $this->assertEquals($result, 52982.2731);
+    }
+
+    public function testGetMinerThreads()
+    {
+        $this->appendNextResponse('minerThreads/threads.json');
+
+        $result = $this->client->getMinerThreads();
+
+        $body = $this->getLastRequestBody();
+        $this->assertEquals($body['method'], 'minerThreads');
+
+        $this->assertIsInt($result);
+        $this->assertEquals($result, 2);
+    }
+
+    public function testSetMinerThreads()
+    {
+        $this->appendNextResponse('minerThreads/threads.json');
+
+        $result = $this->client->setMinerThreads(2);
+
+        $body = $this->getLastRequestBody();
+        $this->assertEquals($body['method'], 'minerThreads');
+        $this->assertEquals($body['params'][0], 2);
+
+        $this->assertIsInt($result);
+        $this->assertEquals($result, 2);
+    }
+
+    public function testGetMinerAddress()
+    {
+        $this->appendNextResponse('minerAddress/address.json');
+
+        $result = $this->client->getMinerAddress();
+
+        $body = $this->getLastRequestBody();
+        $this->assertEquals($body['method'], 'minerAddress');
+
+        $this->assertIsString($result);
+        $this->assertEquals($result, 'NQ39 NY67 X0F0 UTQE 0YER 4JEU B67L UPP8 G0FM');
+    }
+
+    public function testGetPool()
+    {
+        $this->assertTrue(false);
+    }
+
+    public function testGetPoolWhenNoPool()
+    {
+        $this->appendNextResponse('pool/no-pool.json');
+
+        $result = $this->client->getPool();
+
+        $body = $this->getLastRequestBody();
+        $this->assertEquals($body['method'], 'pool');
+
+        $this->assertEquals($result, null);
+    }
+
+    public function testGetPoolConnectionState()
+    {
+        $this->assertTrue(false);
+    }
+
+    public function testGetPoolConfirmedBalance()
+    {
+        $this->assertTrue(false);
     }
 
     private function appendNextResponse($fixture)
