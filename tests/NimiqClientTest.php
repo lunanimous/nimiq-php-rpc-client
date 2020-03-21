@@ -55,9 +55,9 @@ class NimiqClientTest extends \PHPUnit\Framework\TestCase
         $result = $this->client->getPeerCount();
 
         $body = $this->getLastRequestBody();
-        $this->assertEquals($body['method'], 'peerCount');
+        $this->assertEquals('peerCount', $body['method']);
 
-        $this->assertEquals($result, 6);
+        $this->assertEquals(6, $result);
     }
 
     public function testGetSyncingStateWhenSyncing()
@@ -67,11 +67,11 @@ class NimiqClientTest extends \PHPUnit\Framework\TestCase
         $result = $this->client->getSyncingState();
 
         $body = $this->getLastRequestBody();
-        $this->assertEquals($body['method'], 'syncing');
+        $this->assertEquals('syncing', $body['method']);
 
-        $this->assertEquals($result->startingBlock, 578430);
-        $this->assertEquals($result->currentBlock, 586493);
-        $this->assertEquals($result->highestBlock, 586493);
+        $this->assertEquals(578430, $result->startingBlock);
+        $this->assertEquals(586493, $result->currentBlock);
+        $this->assertEquals(586493, $result->highestBlock);
     }
 
     public function testGetSyncingStateWhenNotSyncing()
@@ -81,9 +81,9 @@ class NimiqClientTest extends \PHPUnit\Framework\TestCase
         $result = $this->client->getSyncingState();
 
         $body = $this->getLastRequestBody();
-        $this->assertEquals($body['method'], 'syncing');
+        $this->assertEquals('syncing', $body['method']);
 
-        $this->assertEquals($result, false);
+        $this->assertEquals(false, $result);
     }
 
     public function testGetConsensusState()
@@ -93,9 +93,9 @@ class NimiqClientTest extends \PHPUnit\Framework\TestCase
         $result = $this->client->getConsensusState();
 
         $body = $this->getLastRequestBody();
-        $this->assertEquals($body['method'], 'consensus');
+        $this->assertEquals('consensus', $body['method']);
 
-        $this->assertEquals($result, ConsensusState::Syncing);
+        $this->assertEquals(ConsensusState::Syncing, $result);
     }
 
     public function testGetPeerListWithPeers()
@@ -105,20 +105,20 @@ class NimiqClientTest extends \PHPUnit\Framework\TestCase
         $result = $this->client->getPeerList();
 
         $body = $this->getLastRequestBody();
-        $this->assertEquals($body['method'], 'peerList');
+        $this->assertEquals('peerList', $body['method']);
 
         $this->assertEquals(count($result), 2);
         $this->assertInstanceOf(Peer::class, $result[0]);
-        $this->assertEquals($result[0]->id, 'b99034c552e9c0fd34eb95c1cdf17f5e');
-        $this->assertEquals($result[0]->address, 'wss://seed1.nimiq-testnet.com:8080/b99034c552e9c0fd34eb95c1cdf17f5e');
-        $this->assertEquals($result[0]->addressState, AddressState::Established);
-        $this->assertEquals($result[0]->connectionState, ConnectionState::Established);
+        $this->assertEquals('b99034c552e9c0fd34eb95c1cdf17f5e', $result[0]->id);
+        $this->assertEquals('wss://seed1.nimiq-testnet.com:8080/b99034c552e9c0fd34eb95c1cdf17f5e', $result[0]->address);
+        $this->assertEquals(AddressState::Established, $result[0]->addressState);
+        $this->assertEquals(ConnectionState::Established, $result[0]->connectionState);
 
         $this->assertInstanceOf(Peer::class, $result[1]);
-        $this->assertEquals($result[1]->id, 'e37dca72802c972d45b37735e9595cf0');
-        $this->assertEquals($result[1]->address, 'wss://seed4.nimiq-testnet.com:8080/e37dca72802c972d45b37735e9595cf0');
-        $this->assertEquals($result[1]->addressState, AddressState::Failed);
-        $this->assertEquals($result[1]->connectionState, null);
+        $this->assertEquals('e37dca72802c972d45b37735e9595cf0', $result[1]->id);
+        $this->assertEquals('wss://seed4.nimiq-testnet.com:8080/e37dca72802c972d45b37735e9595cf0', $result[1]->address);
+        $this->assertEquals(AddressState::Failed, $result[1]->addressState);
+        $this->assertEquals(null, $result[1]->connectionState);
     }
 
     public function testGetPeerListWhenEmpty()
@@ -128,7 +128,7 @@ class NimiqClientTest extends \PHPUnit\Framework\TestCase
         $result = $this->client->getPeerList();
 
         $body = $this->getLastRequestBody();
-        $this->assertEquals($body['method'], 'peerList');
+        $this->assertEquals('peerList', $body['method']);
 
         $this->assertEquals(count($result), 0);
     }
@@ -140,14 +140,14 @@ class NimiqClientTest extends \PHPUnit\Framework\TestCase
         $result = $this->client->getPeer('wss://seed1.nimiq-testnet.com:8080/b99034c552e9c0fd34eb95c1cdf17f5e');
 
         $body = $this->getLastRequestBody();
-        $this->assertEquals($body['method'], 'peerState');
-        $this->assertEquals($body['params'][0], 'wss://seed1.nimiq-testnet.com:8080/b99034c552e9c0fd34eb95c1cdf17f5e');
+        $this->assertEquals('peerState', $body['method']);
+        $this->assertEquals('wss://seed1.nimiq-testnet.com:8080/b99034c552e9c0fd34eb95c1cdf17f5e', $body['params'][0]);
 
         $this->assertInstanceOf(Peer::class, $result);
-        $this->assertEquals($result->id, 'b99034c552e9c0fd34eb95c1cdf17f5e');
-        $this->assertEquals($result->address, 'wss://seed1.nimiq-testnet.com:8080/b99034c552e9c0fd34eb95c1cdf17f5e');
-        $this->assertEquals($result->addressState, AddressState::Established);
-        $this->assertEquals($result->connectionState, ConnectionState::Established);
+        $this->assertEquals('b99034c552e9c0fd34eb95c1cdf17f5e', $result->id);
+        $this->assertEquals('wss://seed1.nimiq-testnet.com:8080/b99034c552e9c0fd34eb95c1cdf17f5e', $result->address);
+        $this->assertEquals(AddressState::Established, $result->addressState);
+        $this->assertEquals(ConnectionState::Established, $result->connectionState);
     }
 
     public function testGetPeerFailed()
@@ -157,14 +157,14 @@ class NimiqClientTest extends \PHPUnit\Framework\TestCase
         $result = $this->client->getPeer('wss://seed4.nimiq-testnet.com:8080/e37dca72802c972d45b37735e9595cf0');
 
         $body = $this->getLastRequestBody();
-        $this->assertEquals($body['method'], 'peerState');
-        $this->assertEquals($body['params'][0], 'wss://seed4.nimiq-testnet.com:8080/e37dca72802c972d45b37735e9595cf0');
+        $this->assertEquals('peerState', $body['method']);
+        $this->assertEquals('wss://seed4.nimiq-testnet.com:8080/e37dca72802c972d45b37735e9595cf0', $body['params'][0]);
 
         $this->assertInstanceOf(Peer::class, $result);
-        $this->assertEquals($result->id, 'e37dca72802c972d45b37735e9595cf0');
-        $this->assertEquals($result->address, 'wss://seed4.nimiq-testnet.com:8080/e37dca72802c972d45b37735e9595cf0');
-        $this->assertEquals($result->addressState, AddressState::Failed);
-        $this->assertEquals($result->connectionState, null);
+        $this->assertEquals('e37dca72802c972d45b37735e9595cf0', $result->id);
+        $this->assertEquals('wss://seed4.nimiq-testnet.com:8080/e37dca72802c972d45b37735e9595cf0', $result->address);
+        $this->assertEquals(AddressState::Failed, $result->addressState);
+        $this->assertEquals(null, $result->connectionState);
     }
 
     public function testGetPeerError()
@@ -183,15 +183,15 @@ class NimiqClientTest extends \PHPUnit\Framework\TestCase
         $result = $this->client->setPeerState('wss://seed1.nimiq-testnet.com:8080/b99034c552e9c0fd34eb95c1cdf17f5e', PeerStateCommand::Connect);
 
         $body = $this->getLastRequestBody();
-        $this->assertEquals($body['method'], 'peerState');
-        $this->assertEquals($body['params'][0], 'wss://seed1.nimiq-testnet.com:8080/b99034c552e9c0fd34eb95c1cdf17f5e');
-        $this->assertEquals($body['params'][1], 'connect');
+        $this->assertEquals('peerState', $body['method']);
+        $this->assertEquals('wss://seed1.nimiq-testnet.com:8080/b99034c552e9c0fd34eb95c1cdf17f5e', $body['params'][0]);
+        $this->assertEquals('connect', $body['params'][1]);
 
         $this->assertInstanceOf(Peer::class, $result);
-        $this->assertEquals($result->id, 'b99034c552e9c0fd34eb95c1cdf17f5e');
-        $this->assertEquals($result->address, 'wss://seed1.nimiq-testnet.com:8080/b99034c552e9c0fd34eb95c1cdf17f5e');
-        $this->assertEquals($result->addressState, AddressState::Established);
-        $this->assertEquals($result->connectionState, ConnectionState::Established);
+        $this->assertEquals('b99034c552e9c0fd34eb95c1cdf17f5e', $result->id);
+        $this->assertEquals('wss://seed1.nimiq-testnet.com:8080/b99034c552e9c0fd34eb95c1cdf17f5e', $result->address);
+        $this->assertEquals(AddressState::Established, $result->addressState);
+        $this->assertEquals(ConnectionState::Established, $result->connectionState);
     }
 
     public function testSendRawTransaction()
@@ -223,7 +223,7 @@ class NimiqClientTest extends \PHPUnit\Framework\TestCase
         $result = $this->client->createRawTransaction($transaction);
 
         $body = $this->getLastRequestBody();
-        $this->assertEquals($body['method'], 'createRawTransaction');
+        $this->assertEquals('createRawTransaction', $body['method']);
 
         $param = $body['params'][0];
         $this->assertEquals($param, [
@@ -236,7 +236,7 @@ class NimiqClientTest extends \PHPUnit\Framework\TestCase
             'data' => null,
         ]);
 
-        $this->assertEquals($result, '00c3c0d1af80b84c3b3de4e3d79d5c8cc950e044098c969953d68bf9cee68d7b53305dbaac7514a06dae935e40d599caf1bd8a243c00000000000186a00000000000000001000af84c01239b16cee089836c2af5c7b1dbb22cdc0b4864349f7f3805909aa8cf24e4c1ff0461832e86f3624778a867d5f2ba318f92918ada7ae28d70d40c4ef1d6413802');
+        $this->assertEquals('00c3c0d1af80b84c3b3de4e3d79d5c8cc950e044098c969953d68bf9cee68d7b53305dbaac7514a06dae935e40d599caf1bd8a243c00000000000186a00000000000000001000af84c01239b16cee089836c2af5c7b1dbb22cdc0b4864349f7f3805909aa8cf24e4c1ff0461832e86f3624778a867d5f2ba318f92918ada7ae28d70d40c4ef1d6413802', $result);
     }
 
     public function testSendTransaction()
@@ -278,17 +278,17 @@ class NimiqClientTest extends \PHPUnit\Framework\TestCase
         $result = $this->client->getRawTransactionInfo('00c3c0d1af80b84c3b3de4e3d79d5c8cc950e044098c969953d68bf9cee68d7b53305dbaac7514a06dae935e40d599caf1bd8a243c00000000000186a00000000000000001000af84c01239b16cee089836c2af5c7b1dbb22cdc0b4864349f7f3805909aa8cf24e4c1ff0461832e86f3624778a867d5f2ba318f92918ada7ae28d70d40c4ef1d6413802');
 
         $body = $this->getLastRequestBody();
-        $this->assertEquals($body['method'], 'getRawTransactionInfo');
-        $this->assertEquals($body['params'][0], '00c3c0d1af80b84c3b3de4e3d79d5c8cc950e044098c969953d68bf9cee68d7b53305dbaac7514a06dae935e40d599caf1bd8a243c00000000000186a00000000000000001000af84c01239b16cee089836c2af5c7b1dbb22cdc0b4864349f7f3805909aa8cf24e4c1ff0461832e86f3624778a867d5f2ba318f92918ada7ae28d70d40c4ef1d6413802');
+        $this->assertEquals('getRawTransactionInfo', $body['method']);
+        $this->assertEquals('00c3c0d1af80b84c3b3de4e3d79d5c8cc950e044098c969953d68bf9cee68d7b53305dbaac7514a06dae935e40d599caf1bd8a243c00000000000186a00000000000000001000af84c01239b16cee089836c2af5c7b1dbb22cdc0b4864349f7f3805909aa8cf24e4c1ff0461832e86f3624778a867d5f2ba318f92918ada7ae28d70d40c4ef1d6413802', $body['params'][0]);
 
         $this->assertInstanceOf(Transaction::class, $result);
-        $this->assertEquals($result->hash, '7784f2f6eaa076fa5cf0e4d06311ad204b2f485de622231785451181e8129091');
-        $this->assertEquals($result->from, 'b7cc7f01e0e6f0e07dd9249dc598f4e5ee8801f5');
-        $this->assertEquals($result->fromAddress, 'NQ39 NY67 X0F0 UTQE 0YER 4JEU B67L UPP8 G0FM');
-        $this->assertEquals($result->to, '305dbaac7514a06dae935e40d599caf1bd8a243c');
-        $this->assertEquals($result->toAddress, 'NQ16 61ET MB3M 2JG6 TBLK BR0D B6EA X6XQ L91U');
-        $this->assertEquals($result->value, 100000);
-        $this->assertEquals($result->fee, 1);
+        $this->assertEquals('7784f2f6eaa076fa5cf0e4d06311ad204b2f485de622231785451181e8129091', $result->hash);
+        $this->assertEquals('b7cc7f01e0e6f0e07dd9249dc598f4e5ee8801f5', $result->from);
+        $this->assertEquals('NQ39 NY67 X0F0 UTQE 0YER 4JEU B67L UPP8 G0FM', $result->fromAddress);
+        $this->assertEquals('305dbaac7514a06dae935e40d599caf1bd8a243c', $result->to);
+        $this->assertEquals('NQ16 61ET MB3M 2JG6 TBLK BR0D B6EA X6XQ L91U', $result->toAddress);
+        $this->assertEquals(100000, $result->value);
+        $this->assertEquals(1, $result->fee);
     }
 
     public function testGetTransactionByBlockHashAndIndex()
@@ -298,20 +298,20 @@ class NimiqClientTest extends \PHPUnit\Framework\TestCase
         $result = $this->client->getTransactionByBlockHashAndIndex('bc3945d22c9f6441409a6e539728534a4fc97859bda87333071fad9dad942786', 0);
 
         $body = $this->getLastRequestBody();
-        $this->assertEquals($body['method'], 'getTransactionByBlockHashAndIndex');
-        $this->assertEquals($body['params'][0], 'bc3945d22c9f6441409a6e539728534a4fc97859bda87333071fad9dad942786');
-        $this->assertEquals($body['params'][1], 0);
+        $this->assertEquals('getTransactionByBlockHashAndIndex', $body['method']);
+        $this->assertEquals('bc3945d22c9f6441409a6e539728534a4fc97859bda87333071fad9dad942786', $body['params'][0]);
+        $this->assertEquals(0, $body['params'][1]);
 
         $this->assertInstanceOf(Transaction::class, $result);
-        $this->assertEquals($result->hash, '78957b87ab5546e11e9540ce5a37ebbf93a0ebd73c0ce05f137288f30ee9f430');
-        $this->assertEquals($result->blockHash, 'bc3945d22c9f6441409a6e539728534a4fc97859bda87333071fad9dad942786');
-        $this->assertEquals($result->transactionIndex, 0);
-        $this->assertEquals($result->from, '355b4fe2304a9c818b9f0c3c1aaaf4ad4f6a0279');
-        $this->assertEquals($result->fromAddress, 'NQ16 6MDL YQHG 9AE8 32UY 1GX1 MAPL MM7N L0KR');
-        $this->assertEquals($result->to, '4f61c06feeb7971af6997125fe40d629c01af92f');
-        $this->assertEquals($result->toAddress, 'NQ05 9VGU 0TYE NXBH MVLR E4JY UG6N 5701 MX9F');
-        $this->assertEquals($result->value, 2636710000);
-        $this->assertEquals($result->fee, 0);
+        $this->assertEquals('78957b87ab5546e11e9540ce5a37ebbf93a0ebd73c0ce05f137288f30ee9f430', $result->hash);
+        $this->assertEquals('bc3945d22c9f6441409a6e539728534a4fc97859bda87333071fad9dad942786', $result->blockHash);
+        $this->assertEquals(0, $result->transactionIndex);
+        $this->assertEquals('355b4fe2304a9c818b9f0c3c1aaaf4ad4f6a0279', $result->from);
+        $this->assertEquals('NQ16 6MDL YQHG 9AE8 32UY 1GX1 MAPL MM7N L0KR', $result->fromAddress);
+        $this->assertEquals('4f61c06feeb7971af6997125fe40d629c01af92f', $result->to);
+        $this->assertEquals('NQ05 9VGU 0TYE NXBH MVLR E4JY UG6N 5701 MX9F', $result->toAddress);
+        $this->assertEquals(2636710000, $result->value);
+        $this->assertEquals(0, $result->fee);
     }
 
     public function testGetTransactionByBlockHashAndIndexWhenNotFound()
@@ -321,11 +321,11 @@ class NimiqClientTest extends \PHPUnit\Framework\TestCase
         $result = $this->client->getTransactionByBlockHashAndIndex('bc3945d22c9f6441409a6e539728534a4fc97859bda87333071fad9dad942786', 5);
 
         $body = $this->getLastRequestBody();
-        $this->assertEquals($body['method'], 'getTransactionByBlockHashAndIndex');
-        $this->assertEquals($body['params'][0], 'bc3945d22c9f6441409a6e539728534a4fc97859bda87333071fad9dad942786');
-        $this->assertEquals($body['params'][1], 5);
+        $this->assertEquals('getTransactionByBlockHashAndIndex', $body['method']);
+        $this->assertEquals('bc3945d22c9f6441409a6e539728534a4fc97859bda87333071fad9dad942786', $body['params'][0]);
+        $this->assertEquals(5, $body['params'][1]);
 
-        $this->assertEquals($result, null);
+        $this->assertEquals(null, $result);
     }
 
     public function testGetTransactionByBlockNumberAndIndex()
@@ -335,20 +335,20 @@ class NimiqClientTest extends \PHPUnit\Framework\TestCase
         $result = $this->client->getTransactionByBlockNumberAndIndex(11608, 0);
 
         $body = $this->getLastRequestBody();
-        $this->assertEquals($body['method'], 'getTransactionByBlockNumberAndIndex');
-        $this->assertEquals($body['params'][0], 11608);
-        $this->assertEquals($body['params'][1], 0);
+        $this->assertEquals('getTransactionByBlockNumberAndIndex', $body['method']);
+        $this->assertEquals(11608, $body['params'][0]);
+        $this->assertEquals(0, $body['params'][1]);
 
         $this->assertInstanceOf(Transaction::class, $result);
-        $this->assertEquals($result->hash, '78957b87ab5546e11e9540ce5a37ebbf93a0ebd73c0ce05f137288f30ee9f430');
-        $this->assertEquals($result->blockNumber, 11608);
-        $this->assertEquals($result->transactionIndex, 0);
-        $this->assertEquals($result->from, '355b4fe2304a9c818b9f0c3c1aaaf4ad4f6a0279');
-        $this->assertEquals($result->fromAddress, 'NQ16 6MDL YQHG 9AE8 32UY 1GX1 MAPL MM7N L0KR');
-        $this->assertEquals($result->to, '4f61c06feeb7971af6997125fe40d629c01af92f');
-        $this->assertEquals($result->toAddress, 'NQ05 9VGU 0TYE NXBH MVLR E4JY UG6N 5701 MX9F');
-        $this->assertEquals($result->value, 2636710000);
-        $this->assertEquals($result->fee, 0);
+        $this->assertEquals('78957b87ab5546e11e9540ce5a37ebbf93a0ebd73c0ce05f137288f30ee9f430', $result->hash);
+        $this->assertEquals(11608, $result->blockNumber);
+        $this->assertEquals(0, $result->transactionIndex);
+        $this->assertEquals('355b4fe2304a9c818b9f0c3c1aaaf4ad4f6a0279', $result->from);
+        $this->assertEquals('NQ16 6MDL YQHG 9AE8 32UY 1GX1 MAPL MM7N L0KR', $result->fromAddress);
+        $this->assertEquals('4f61c06feeb7971af6997125fe40d629c01af92f', $result->to);
+        $this->assertEquals('NQ05 9VGU 0TYE NXBH MVLR E4JY UG6N 5701 MX9F', $result->toAddress);
+        $this->assertEquals(2636710000, $result->value);
+        $this->assertEquals(0, $result->fee);
     }
 
     public function testGetTransactionByBlockNumberAndIndexWhenNotFound()
@@ -358,11 +358,11 @@ class NimiqClientTest extends \PHPUnit\Framework\TestCase
         $result = $this->client->getTransactionByBlockNumberAndIndex(11608, 0);
 
         $body = $this->getLastRequestBody();
-        $this->assertEquals($body['method'], 'getTransactionByBlockNumberAndIndex');
-        $this->assertEquals($body['params'][0], 11608);
-        $this->assertEquals($body['params'][1], 0);
+        $this->assertEquals('getTransactionByBlockNumberAndIndex', $body['method']);
+        $this->assertEquals(11608, $body['params'][0]);
+        $this->assertEquals(0, $body['params'][1]);
 
-        $this->assertEquals($result, null);
+        $this->assertEquals(null, $result);
     }
 
     public function testGetTransactionByHash()
@@ -372,19 +372,19 @@ class NimiqClientTest extends \PHPUnit\Framework\TestCase
         $result = $this->client->getTransactionByHash('78957b87ab5546e11e9540ce5a37ebbf93a0ebd73c0ce05f137288f30ee9f430');
 
         $body = $this->getLastRequestBody();
-        $this->assertEquals($body['method'], 'getTransactionByHash');
-        $this->assertEquals($body['params'][0], '78957b87ab5546e11e9540ce5a37ebbf93a0ebd73c0ce05f137288f30ee9f430');
+        $this->assertEquals('getTransactionByHash', $body['method']);
+        $this->assertEquals('78957b87ab5546e11e9540ce5a37ebbf93a0ebd73c0ce05f137288f30ee9f430', $body['params'][0]);
 
         $this->assertInstanceOf(Transaction::class, $result);
-        $this->assertEquals($result->hash, '78957b87ab5546e11e9540ce5a37ebbf93a0ebd73c0ce05f137288f30ee9f430');
-        $this->assertEquals($result->blockNumber, 11608);
-        $this->assertEquals($result->transactionIndex, 0);
-        $this->assertEquals($result->from, '355b4fe2304a9c818b9f0c3c1aaaf4ad4f6a0279');
-        $this->assertEquals($result->fromAddress, 'NQ16 6MDL YQHG 9AE8 32UY 1GX1 MAPL MM7N L0KR');
-        $this->assertEquals($result->to, '4f61c06feeb7971af6997125fe40d629c01af92f');
-        $this->assertEquals($result->toAddress, 'NQ05 9VGU 0TYE NXBH MVLR E4JY UG6N 5701 MX9F');
-        $this->assertEquals($result->value, 2636710000);
-        $this->assertEquals($result->fee, 0);
+        $this->assertEquals('78957b87ab5546e11e9540ce5a37ebbf93a0ebd73c0ce05f137288f30ee9f430', $result->hash);
+        $this->assertEquals(11608, $result->blockNumber);
+        $this->assertEquals(0, $result->transactionIndex);
+        $this->assertEquals('355b4fe2304a9c818b9f0c3c1aaaf4ad4f6a0279', $result->from);
+        $this->assertEquals('NQ16 6MDL YQHG 9AE8 32UY 1GX1 MAPL MM7N L0KR', $result->fromAddress);
+        $this->assertEquals('4f61c06feeb7971af6997125fe40d629c01af92f', $result->to);
+        $this->assertEquals('NQ05 9VGU 0TYE NXBH MVLR E4JY UG6N 5701 MX9F', $result->toAddress);
+        $this->assertEquals(2636710000, $result->value);
+        $this->assertEquals(0, $result->fee);
     }
 
     public function testGetTransactionByHashWhenNotFound()
@@ -394,10 +394,10 @@ class NimiqClientTest extends \PHPUnit\Framework\TestCase
         $result = $this->client->getTransactionByHash('78957b87ab5546e11e9540ce5a37ebbf93a0ebd73c0ce05f137288f30ee9f430');
 
         $body = $this->getLastRequestBody();
-        $this->assertEquals($body['method'], 'getTransactionByHash');
-        $this->assertEquals($body['params'][0], '78957b87ab5546e11e9540ce5a37ebbf93a0ebd73c0ce05f137288f30ee9f430');
+        $this->assertEquals('getTransactionByHash', $body['method']);
+        $this->assertEquals('78957b87ab5546e11e9540ce5a37ebbf93a0ebd73c0ce05f137288f30ee9f430', $body['params'][0]);
 
-        $this->assertEquals($result, null);
+        $this->assertEquals(null, $result);
     }
 
     public function testGetTransactionReceipt()
@@ -439,16 +439,16 @@ class NimiqClientTest extends \PHPUnit\Framework\TestCase
         $result = $this->client->getTransactionsByAddress('NQ05 9VGU 0TYE NXBH MVLR E4JY UG6N 5701 MX9F');
 
         $body = $this->getLastRequestBody();
-        $this->assertEquals($body['method'], 'getTransactionsByAddress');
-        $this->assertEquals($body['params'][0], 'NQ05 9VGU 0TYE NXBH MVLR E4JY UG6N 5701 MX9F');
+        $this->assertEquals('getTransactionsByAddress', $body['method']);
+        $this->assertEquals('NQ05 9VGU 0TYE NXBH MVLR E4JY UG6N 5701 MX9F', $body['params'][0]);
 
         $this->assertCount(3, $result);
         $this->assertInstanceOf(Transaction::class, $result[0]);
-        $this->assertEquals($result[0]->hash, 'a514abb3ee4d3fbedf8a91156fb9ec4fdaf32f0d3d3da3c1dbc5fd1ee48db43e');
+        $this->assertEquals('a514abb3ee4d3fbedf8a91156fb9ec4fdaf32f0d3d3da3c1dbc5fd1ee48db43e', $result[0]->hash);
         $this->assertInstanceOf(Transaction::class, $result[1]);
-        $this->assertEquals($result[1]->hash, 'c8c0f586b11c7f39873c3de08610d63e8bec1ceaeba5e8a3bb13c709b2935f73');
+        $this->assertEquals('c8c0f586b11c7f39873c3de08610d63e8bec1ceaeba5e8a3bb13c709b2935f73', $result[1]->hash);
         $this->assertInstanceOf(Transaction::class, $result[2]);
-        $this->assertEquals($result[2]->hash, 'fd8e46ae55c5b8cd7cb086cf8d6c81f941a516d6148021d55f912fb2ca75cc8e');
+        $this->assertEquals('fd8e46ae55c5b8cd7cb086cf8d6c81f941a516d6148021d55f912fb2ca75cc8e', $result[2]->hash);
     }
 
     public function testGetTransactionsByAddressWhenNoFound()
@@ -458,10 +458,10 @@ class NimiqClientTest extends \PHPUnit\Framework\TestCase
         $result = $this->client->getTransactionsByAddress('NQ10 9VGU 0TYE NXBH MVLR E4JY UG6N 5701 MX9F');
 
         $body = $this->getLastRequestBody();
-        $this->assertEquals($body['method'], 'getTransactionsByAddress');
-        $this->assertEquals($body['params'][0], 'NQ10 9VGU 0TYE NXBH MVLR E4JY UG6N 5701 MX9F');
+        $this->assertEquals('getTransactionsByAddress', $body['method']);
+        $this->assertEquals('NQ10 9VGU 0TYE NXBH MVLR E4JY UG6N 5701 MX9F', $body['params'][0]);
 
-        $this->assertEquals($result, []);
+        $this->assertEquals([], $result);
     }
 
     public function testGetMempoolContentHashesOnly()
@@ -471,16 +471,16 @@ class NimiqClientTest extends \PHPUnit\Framework\TestCase
         $result = $this->client->getMempoolContent();
 
         $body = $this->getLastRequestBody();
-        $this->assertEquals($body['method'], 'mempoolContent');
-        $this->assertEquals($body['params'][0], false);
+        $this->assertEquals('mempoolContent', $body['method']);
+        $this->assertEquals(false, $body['params'][0]);
 
         $this->assertCount(3, $result);
         $this->assertIsString($result[0]);
-        $this->assertEquals($result[0], '5bb722c2afe25c18ba33d453b3ac2c90ac278c595cc92f6188c8b699e8fb006a');
+        $this->assertEquals('5bb722c2afe25c18ba33d453b3ac2c90ac278c595cc92f6188c8b699e8fb006a', $result[0]);
         $this->assertIsString($result[1]);
-        $this->assertEquals($result[1], 'f59a30e0a7e3348ef569225db1f4c29026aeac4350f8c6e751f669eddce0c718');
+        $this->assertEquals('f59a30e0a7e3348ef569225db1f4c29026aeac4350f8c6e751f669eddce0c718', $result[1]);
         $this->assertIsString($result[2]);
-        $this->assertEquals($result[2], '9cd9c1d0ffcaebfcfe86bc2ae73b4e82a488de99c8e3faef92b05432bb94519c');
+        $this->assertEquals('9cd9c1d0ffcaebfcfe86bc2ae73b4e82a488de99c8e3faef92b05432bb94519c', $result[2]);
     }
 
     public function testGetMempoolContentFullTransactions()
@@ -490,16 +490,16 @@ class NimiqClientTest extends \PHPUnit\Framework\TestCase
         $result = $this->client->getMempoolContent(true);
 
         $body = $this->getLastRequestBody();
-        $this->assertEquals($body['method'], 'mempoolContent');
-        $this->assertEquals($body['params'][0], true);
+        $this->assertEquals('mempoolContent', $body['method']);
+        $this->assertEquals(true, $body['params'][0]);
 
         $this->assertCount(3, $result);
         $this->assertInstanceOf(Transaction::class, $result[0]);
-        $this->assertEquals($result[0]->hash, '5bb722c2afe25c18ba33d453b3ac2c90ac278c595cc92f6188c8b699e8fb006a');
+        $this->assertEquals('5bb722c2afe25c18ba33d453b3ac2c90ac278c595cc92f6188c8b699e8fb006a', $result[0]->hash);
         $this->assertInstanceOf(Transaction::class, $result[1]);
-        $this->assertEquals($result[1]->hash, 'f59a30e0a7e3348ef569225db1f4c29026aeac4350f8c6e751f669eddce0c718');
+        $this->assertEquals('f59a30e0a7e3348ef569225db1f4c29026aeac4350f8c6e751f669eddce0c718', $result[1]->hash);
         $this->assertInstanceOf(Transaction::class, $result[2]);
-        $this->assertEquals($result[2]->hash, '9cd9c1d0ffcaebfcfe86bc2ae73b4e82a488de99c8e3faef92b05432bb94519c');
+        $this->assertEquals('9cd9c1d0ffcaebfcfe86bc2ae73b4e82a488de99c8e3faef92b05432bb94519c', $result[2]->hash);
     }
 
     public function testGetMempoolWhenFull()
@@ -509,12 +509,12 @@ class NimiqClientTest extends \PHPUnit\Framework\TestCase
         $result = $this->client->getMempool();
 
         $body = $this->getLastRequestBody();
-        $this->assertEquals($body['method'], 'mempool');
+        $this->assertEquals('mempool', $body['method']);
 
         $this->assertInstanceOf(Mempool::class, $result);
-        $this->assertEquals($result->total, 3);
-        $this->assertEquals($result->buckets, [1]);
-        $this->assertEquals($result->transactionsPerBucket[1], 3);
+        $this->assertEquals(3, $result->total);
+        $this->assertEquals([1], $result->buckets);
+        $this->assertEquals(3, $result->transactionsPerBucket[1]);
     }
 
     public function testGetMempoolWhenEmpty()
@@ -524,12 +524,12 @@ class NimiqClientTest extends \PHPUnit\Framework\TestCase
         $result = $this->client->getMempool();
 
         $body = $this->getLastRequestBody();
-        $this->assertEquals($body['method'], 'mempool');
+        $this->assertEquals('mempool', $body['method']);
 
         $this->assertInstanceOf(Mempool::class, $result);
-        $this->assertEquals($result->total, 0);
-        $this->assertEquals($result->buckets, []);
-        $this->assertEquals($result->transactionsPerBucket, []);
+        $this->assertEquals(0, $result->total);
+        $this->assertEquals([], $result->buckets);
+        $this->assertEquals([], $result->transactionsPerBucket);
     }
 
     public function testGetMinFeePerByte()
@@ -539,10 +539,10 @@ class NimiqClientTest extends \PHPUnit\Framework\TestCase
         $result = $this->client->getMinFeePerByte();
 
         $body = $this->getLastRequestBody();
-        $this->assertEquals($body['method'], 'minFeePerByte');
+        $this->assertEquals('minFeePerByte', $body['method']);
 
         $this->assertIsInt($result);
-        $this->assertEquals($result, 0);
+        $this->assertEquals(0, $result);
     }
 
     public function testSetMinFeePerByte()
@@ -552,11 +552,11 @@ class NimiqClientTest extends \PHPUnit\Framework\TestCase
         $result = $this->client->setMinFeePerByte(0);
 
         $body = $this->getLastRequestBody();
-        $this->assertEquals($body['method'], 'minFeePerByte');
-        $this->assertEquals($body['params'][0], 0);
+        $this->assertEquals('minFeePerByte', $body['method']);
+        $this->assertEquals(0, $body['params'][0]);
 
         $this->assertIsInt($result);
-        $this->assertEquals($result, 0);
+        $this->assertEquals(0, $result);
     }
 
     public function testGetMiningState()
@@ -566,10 +566,10 @@ class NimiqClientTest extends \PHPUnit\Framework\TestCase
         $result = $this->client->getMiningState();
 
         $body = $this->getLastRequestBody();
-        $this->assertEquals($body['method'], 'mining');
+        $this->assertEquals('mining', $body['method']);
 
         $this->assertIsBool($result);
-        $this->assertEquals($result, false);
+        $this->assertEquals(false, $result);
     }
 
     public function testSetMiningState()
@@ -579,11 +579,11 @@ class NimiqClientTest extends \PHPUnit\Framework\TestCase
         $result = $this->client->setMiningState(false);
 
         $body = $this->getLastRequestBody();
-        $this->assertEquals($body['method'], 'mining');
-        $this->assertEquals($body['params'][0], false);
+        $this->assertEquals('mining', $body['method']);
+        $this->assertEquals(false, $body['params'][0]);
 
         $this->assertIsBool($result);
-        $this->assertEquals($result, false);
+        $this->assertEquals(false, $result);
     }
 
     public function testGetHashrate()
@@ -593,10 +593,10 @@ class NimiqClientTest extends \PHPUnit\Framework\TestCase
         $result = $this->client->getHashrate();
 
         $body = $this->getLastRequestBody();
-        $this->assertEquals($body['method'], 'hashrate');
+        $this->assertEquals('hashrate', $body['method']);
 
         $this->assertIsFloat($result);
-        $this->assertEquals($result, 52982.2731);
+        $this->assertEquals(52982.2731, $result);
     }
 
     public function testGetMinerThreads()
@@ -606,10 +606,10 @@ class NimiqClientTest extends \PHPUnit\Framework\TestCase
         $result = $this->client->getMinerThreads();
 
         $body = $this->getLastRequestBody();
-        $this->assertEquals($body['method'], 'minerThreads');
+        $this->assertEquals('minerThreads', $body['method']);
 
         $this->assertIsInt($result);
-        $this->assertEquals($result, 2);
+        $this->assertEquals(2, $result);
     }
 
     public function testSetMinerThreads()
@@ -619,11 +619,11 @@ class NimiqClientTest extends \PHPUnit\Framework\TestCase
         $result = $this->client->setMinerThreads(2);
 
         $body = $this->getLastRequestBody();
-        $this->assertEquals($body['method'], 'minerThreads');
-        $this->assertEquals($body['params'][0], 2);
+        $this->assertEquals('minerThreads', $body['method']);
+        $this->assertEquals(2, $body['params'][0]);
 
         $this->assertIsInt($result);
-        $this->assertEquals($result, 2);
+        $this->assertEquals(2, $result);
     }
 
     public function testGetMinerAddress()
@@ -633,10 +633,10 @@ class NimiqClientTest extends \PHPUnit\Framework\TestCase
         $result = $this->client->getMinerAddress();
 
         $body = $this->getLastRequestBody();
-        $this->assertEquals($body['method'], 'minerAddress');
+        $this->assertEquals('minerAddress', $body['method']);
 
         $this->assertIsString($result);
-        $this->assertEquals($result, 'NQ39 NY67 X0F0 UTQE 0YER 4JEU B67L UPP8 G0FM');
+        $this->assertEquals('NQ39 NY67 X0F0 UTQE 0YER 4JEU B67L UPP8 G0FM', $result);
     }
 
     public function testGetPool()
@@ -673,9 +673,9 @@ class NimiqClientTest extends \PHPUnit\Framework\TestCase
         $result = $this->client->getPool();
 
         $body = $this->getLastRequestBody();
-        $this->assertEquals($body['method'], 'pool');
+        $this->assertEquals('pool', $body['method']);
 
-        $this->assertEquals($result, null);
+        $this->assertEquals(null, $result);
     }
 
     public function testGetPoolConnectionState()
@@ -790,15 +790,15 @@ class NimiqClientTest extends \PHPUnit\Framework\TestCase
         $result = $this->client->getAccounts();
 
         $body = $this->getLastRequestBody();
-        $this->assertEquals($body['method'], 'accounts');
+        $this->assertEquals('accounts', $body['method']);
 
         $this->assertCount(3, $result);
         $this->assertInstanceOf(Account::class, $result[0]);
-        $this->assertEquals($result[0]->address, 'NQ33 Y4JH 0UTN 10DX 88FM 5MJB VHTM RGFU 4219');
+        $this->assertEquals('NQ33 Y4JH 0UTN 10DX 88FM 5MJB VHTM RGFU 4219', $result[0]->address);
         $this->assertInstanceOf(Account::class, $result[1]);
-        $this->assertEquals($result[1]->address, 'NQ82 4557 U5KC 98S8 X6HG GPHK 65VU 5YJ0 3BAV');
+        $this->assertEquals('NQ82 4557 U5KC 98S8 X6HG GPHK 65VU 5YJ0 3BAV', $result[1]->address);
         $this->assertInstanceOf(Account::class, $result[2]);
-        $this->assertEquals($result[2]->address, 'NQ39 NY67 X0F0 UTQE 0YER 4JEU B67L UPP8 G0FM');
+        $this->assertEquals('NQ39 NY67 X0F0 UTQE 0YER 4JEU B67L UPP8 G0FM', $result[2]->address);
     }
 
     public function testCreateAccount()
@@ -808,7 +808,7 @@ class NimiqClientTest extends \PHPUnit\Framework\TestCase
         $result = $this->client->createAccount();
 
         $body = $this->getLastRequestBody();
-        $this->assertEquals($body['method'], 'createAccount');
+        $this->assertEquals('createAccount', $body['method']);
 
         $this->assertInstanceOf(Wallet::class, $result);
         $this->assertEquals('b6edcc7924af5a05af6087959c7233ec2cf1a5db', $result->id);
@@ -823,11 +823,11 @@ class NimiqClientTest extends \PHPUnit\Framework\TestCase
         $result = $this->client->getBalance('NQ46 NTNU QX94 MVD0 BBT0 GXAR QUHK VGNF 39ET');
 
         $body = $this->getLastRequestBody();
-        $this->assertEquals($body['method'], 'getBalance');
-        $this->assertEquals($body['params'][0], 'NQ46 NTNU QX94 MVD0 BBT0 GXAR QUHK VGNF 39ET');
+        $this->assertEquals('getBalance', $body['method']);
+        $this->assertEquals('NQ46 NTNU QX94 MVD0 BBT0 GXAR QUHK VGNF 39ET', $body['params'][0]);
 
         $this->assertIsInt($result);
-        $this->assertEquals($result, 1200000);
+        $this->assertEquals(1200000, $result);
     }
 
     public function testGetAccount()
@@ -837,8 +837,8 @@ class NimiqClientTest extends \PHPUnit\Framework\TestCase
         $result = $this->client->getAccount('NQ46 NTNU QX94 MVD0 BBT0 GXAR QUHK VGNF 39ET');
 
         $body = $this->getLastRequestBody();
-        $this->assertEquals($body['method'], 'getAccount');
-        $this->assertEquals($body['params'][0], 'NQ46 NTNU QX94 MVD0 BBT0 GXAR QUHK VGNF 39ET');
+        $this->assertEquals('getAccount', $body['method']);
+        $this->assertEquals('NQ46 NTNU QX94 MVD0 BBT0 GXAR QUHK VGNF 39ET', $body['params'][0]);
 
         $this->assertInstanceOf(Account::class, $result);
         $this->assertEquals('b6edcc7924af5a05af6087959c7233ec2cf1a5db', $result->id);

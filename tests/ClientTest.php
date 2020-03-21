@@ -39,7 +39,7 @@ class ClientTest extends \PHPUnit\Framework\TestCase
 
         $baseUri = $client->getBaseUri();
 
-        $this->assertEquals($baseUri, 'https://localhost:8181');
+        $this->assertEquals('https://localhost:8181', $baseUri);
     }
 
     public function testClientCalculatesAuthInfo()
@@ -51,9 +51,9 @@ class ClientTest extends \PHPUnit\Framework\TestCase
 
         $auth = $client->getAuth();
 
-        $this->assertEquals($auth, [
+        $this->assertEquals([
             'admin', 'root',
-        ]);
+        ], $auth);
     }
 
     public function testClientSendsProperFormattedRequest()
@@ -67,17 +67,17 @@ class ClientTest extends \PHPUnit\Framework\TestCase
         $this->client->request('test', 'test-string', true, 15, [0, 2, 4], ['key' => 'value']);
         $request = $this->mock->getLastRequest();
 
-        $this->assertEquals($request->getMethod(), 'POST');
+        $this->assertEquals('POST', $request->getMethod());
 
         $body = json_decode($request->getBody()->getContents(), true);
 
-        $this->assertEquals($body['id'], 0);
-        $this->assertEquals($body['method'], 'test');
-        $this->assertEquals($body['params'][0], 'test-string');
-        $this->assertEquals($body['params'][1], true);
-        $this->assertEquals($body['params'][2], 15);
-        $this->assertEquals($body['params'][3], [0, 2, 4]);
-        $this->assertEquals($body['params'][4], ['key' => 'value']);
+        $this->assertEquals(0, $body['id']);
+        $this->assertEquals('test', $body['method']);
+        $this->assertEquals('test-string', $body['params'][0]);
+        $this->assertEquals(true, $body['params'][1]);
+        $this->assertEquals(15, $body['params'][2]);
+        $this->assertEquals([0, 2, 4], $body['params'][3]);
+        $this->assertEquals(['key' => 'value'], $body['params'][4]);
     }
 
     public function testClientReturnsResponseResult()
@@ -90,7 +90,7 @@ class ClientTest extends \PHPUnit\Framework\TestCase
 
         $response = $this->client->request('test', 1000);
 
-        $this->assertEquals($response, 1000);
+        $this->assertEquals(1000, $response);
     }
 
     public function testClientHandlesErrorProperly()
@@ -108,6 +108,6 @@ class ClientTest extends \PHPUnit\Framework\TestCase
         $this->expectExceptionCode(-32601);
         $this->expectExceptionMessage('Method not found');
 
-        $response = $this->client->request('test', 1000);
+        $this->client->request('test', 1000);
     }
 }

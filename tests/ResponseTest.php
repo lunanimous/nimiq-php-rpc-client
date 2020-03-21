@@ -15,7 +15,7 @@ class ResponseTest extends TestCase
         $response = new NimiqResponse($mockResponse);
 
         $this->assertTrue($response->hasResult());
-        $this->assertEquals($response->getResult(), 487233);
+        $this->assertEquals(487233, $response->getResult());
     }
 
     public function testHasErrorIsFalseForSuccessfulResponse()
@@ -32,10 +32,10 @@ class ResponseTest extends TestCase
         $response = new NimiqResponse($mockResponse);
 
         $this->assertTrue($response->hasError());
-        $this->assertEquals($response->getError(), [
+        $this->assertEquals([
             'code' => -32601,
             'message' => 'Method not found',
-        ]);
+        ], $response->getError());
     }
 
     public function testHasResultIsFalseForSuccessfulResponse()
@@ -51,7 +51,7 @@ class ResponseTest extends TestCase
         $mockResponse = new \GuzzleHttp\Psr7\Response(200, [], '{"jsonrpc":"2.0","error":{"code":-32601,"message":"Method not found"},"id":1}');
         $response = new NimiqResponse($mockResponse);
 
-        $this->assertEquals($response->getResponse()->getBody()->__toString(), '{"jsonrpc":"2.0","error":{"code":-32601,"message":"Method not found"},"id":1}');
+        $this->assertEquals('{"jsonrpc":"2.0","error":{"code":-32601,"message":"Method not found"},"id":1}', $response->getResponse()->getBody()->__toString());
     }
 
     public function testResponseCanReturnTheRpcId()
@@ -59,6 +59,6 @@ class ResponseTest extends TestCase
         $mockResponse = new \GuzzleHttp\Psr7\Response(200, [], '{"jsonrpc":"2.0","result":487233,"id":1}');
         $response = new NimiqResponse($mockResponse);
 
-        $this->assertEquals($response->getId(), 1);
+        $this->assertEquals(1, $response->getId());
     }
 }
