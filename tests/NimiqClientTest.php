@@ -232,6 +232,115 @@ class NimiqClientTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($result->fee, 1);
     }
 
+    public function testGetTransactionByBlockHashAndIndex()
+    {
+        $this->appendNextResponse('getTransaction/full-transaction.json');
+
+        $result = $this->client->getTransactionByBlockHashAndIndex('bc3945d22c9f6441409a6e539728534a4fc97859bda87333071fad9dad942786', 0);
+
+        $body = $this->getLastRequestBody();
+        $this->assertEquals($body['method'], 'getTransactionByBlockHashAndIndex');
+        $this->assertEquals($body['params'][0], 'bc3945d22c9f6441409a6e539728534a4fc97859bda87333071fad9dad942786');
+        $this->assertEquals($body['params'][1], 0);
+
+        $this->assertInstanceOf(Transaction::class, $result);
+        $this->assertEquals($result->hash, '78957b87ab5546e11e9540ce5a37ebbf93a0ebd73c0ce05f137288f30ee9f430');
+        $this->assertEquals($result->blockHash, 'bc3945d22c9f6441409a6e539728534a4fc97859bda87333071fad9dad942786');
+        $this->assertEquals($result->transactionIndex, 0);
+        $this->assertEquals($result->from, '355b4fe2304a9c818b9f0c3c1aaaf4ad4f6a0279');
+        $this->assertEquals($result->fromAddress, 'NQ16 6MDL YQHG 9AE8 32UY 1GX1 MAPL MM7N L0KR');
+        $this->assertEquals($result->to, '4f61c06feeb7971af6997125fe40d629c01af92f');
+        $this->assertEquals($result->toAddress, 'NQ05 9VGU 0TYE NXBH MVLR E4JY UG6N 5701 MX9F');
+        $this->assertEquals($result->value, 2636710000);
+        $this->assertEquals($result->fee, 0);
+    }
+
+    public function testGetTransactionByBlockHashAndIndexWhenNotFound()
+    {
+        $this->appendNextResponse('getTransaction/not-found.json');
+
+        $result = $this->client->getTransactionByBlockHashAndIndex('bc3945d22c9f6441409a6e539728534a4fc97859bda87333071fad9dad942786', 5);
+
+        $body = $this->getLastRequestBody();
+        $this->assertEquals($body['method'], 'getTransactionByBlockHashAndIndex');
+        $this->assertEquals($body['params'][0], 'bc3945d22c9f6441409a6e539728534a4fc97859bda87333071fad9dad942786');
+        $this->assertEquals($body['params'][1], 5);
+
+        $this->assertEquals($result, null);
+    }
+
+    public function testGetTransactionByBlockNumberAndIndex()
+    {
+        $this->appendNextResponse('getTransaction/full-transaction.json');
+
+        $result = $this->client->getTransactionByBlockNumberAndIndex(11608, 0);
+
+        $body = $this->getLastRequestBody();
+        $this->assertEquals($body['method'], 'getTransactionByBlockNumberAndIndex');
+        $this->assertEquals($body['params'][0], 11608);
+        $this->assertEquals($body['params'][1], 0);
+
+        $this->assertInstanceOf(Transaction::class, $result);
+        $this->assertEquals($result->hash, '78957b87ab5546e11e9540ce5a37ebbf93a0ebd73c0ce05f137288f30ee9f430');
+        $this->assertEquals($result->blockNumber, 11608);
+        $this->assertEquals($result->transactionIndex, 0);
+        $this->assertEquals($result->from, '355b4fe2304a9c818b9f0c3c1aaaf4ad4f6a0279');
+        $this->assertEquals($result->fromAddress, 'NQ16 6MDL YQHG 9AE8 32UY 1GX1 MAPL MM7N L0KR');
+        $this->assertEquals($result->to, '4f61c06feeb7971af6997125fe40d629c01af92f');
+        $this->assertEquals($result->toAddress, 'NQ05 9VGU 0TYE NXBH MVLR E4JY UG6N 5701 MX9F');
+        $this->assertEquals($result->value, 2636710000);
+        $this->assertEquals($result->fee, 0);
+    }
+
+    public function testGetTransactionByBlockNumberAndIndexWhenNotFound()
+    {
+        $this->appendNextResponse('getTransaction/not-found.json');
+
+        $result = $this->client->getTransactionByBlockNumberAndIndex(11608, 0);
+
+        $body = $this->getLastRequestBody();
+        $this->assertEquals($body['method'], 'getTransactionByBlockNumberAndIndex');
+        $this->assertEquals($body['params'][0], 11608);
+        $this->assertEquals($body['params'][1], 0);
+
+        $this->assertEquals($result, null);
+    }
+
+    public function testGetTransactionByHash()
+    {
+        $this->appendNextResponse('getTransaction/full-transaction.json');
+
+        $result = $this->client->getTransactionByHash('78957b87ab5546e11e9540ce5a37ebbf93a0ebd73c0ce05f137288f30ee9f430');
+
+        $body = $this->getLastRequestBody();
+        $this->assertEquals($body['method'], 'getTransactionByHash');
+        $this->assertEquals($body['params'][0], '78957b87ab5546e11e9540ce5a37ebbf93a0ebd73c0ce05f137288f30ee9f430');
+
+        $this->assertInstanceOf(Transaction::class, $result);
+        $this->assertEquals($result->hash, '78957b87ab5546e11e9540ce5a37ebbf93a0ebd73c0ce05f137288f30ee9f430');
+        $this->assertEquals($result->blockNumber, 11608);
+        $this->assertEquals($result->transactionIndex, 0);
+        $this->assertEquals($result->from, '355b4fe2304a9c818b9f0c3c1aaaf4ad4f6a0279');
+        $this->assertEquals($result->fromAddress, 'NQ16 6MDL YQHG 9AE8 32UY 1GX1 MAPL MM7N L0KR');
+        $this->assertEquals($result->to, '4f61c06feeb7971af6997125fe40d629c01af92f');
+        $this->assertEquals($result->toAddress, 'NQ05 9VGU 0TYE NXBH MVLR E4JY UG6N 5701 MX9F');
+        $this->assertEquals($result->value, 2636710000);
+        $this->assertEquals($result->fee, 0);
+    }
+
+    public function testGetTransactionByHashWhenNotFound()
+    {
+        $this->appendNextResponse('getTransaction/not-found.json');
+
+        $result = $this->client->getTransactionByHash('78957b87ab5546e11e9540ce5a37ebbf93a0ebd73c0ce05f137288f30ee9f430');
+
+        $body = $this->getLastRequestBody();
+        $this->assertEquals($body['method'], 'getTransactionByHash');
+        $this->assertEquals($body['params'][0], '78957b87ab5546e11e9540ce5a37ebbf93a0ebd73c0ce05f137288f30ee9f430');
+
+        $this->assertEquals($result, null);
+    }
+
     private function appendNextResponse($fixture)
     {
         $jsonResponse = file_get_contents(dirname(__FILE__).'/fixtures/'.$fixture);
