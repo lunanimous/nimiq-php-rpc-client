@@ -847,6 +847,50 @@ class NimiqClientTest extends \PHPUnit\Framework\TestCase
         $this->assertNull($result);
     }
 
+    public function testGetConstant()
+    {
+        $this->appendNextResponse('constant/constant.json');
+
+        $result = $this->client->getConstant('BaseConsensus.MAX_ATTEMPTS_TO_FETCH');
+
+        $body = $this->getLastRequestBody();
+        $this->assertEquals('constant', $body['method']);
+        $this->assertEquals('BaseConsensus.MAX_ATTEMPTS_TO_FETCH', $body['params'][0]);
+
+        $this->assertIsInt($result);
+        $this->assertEquals(5, $result);
+    }
+
+    public function testSetConstant()
+    {
+        $this->appendNextResponse('constant/constant.json');
+
+        $result = $this->client->setConstant('BaseConsensus.MAX_ATTEMPTS_TO_FETCH', 10);
+
+        $body = $this->getLastRequestBody();
+        $this->assertEquals('constant', $body['method']);
+        $this->assertEquals('BaseConsensus.MAX_ATTEMPTS_TO_FETCH', $body['params'][0]);
+        $this->assertEquals(10, $body['params'][1]);
+
+        $this->assertIsInt($result);
+        $this->assertEquals(5, $result);
+    }
+
+    public function testResetConstant()
+    {
+        $this->appendNextResponse('constant/constant.json');
+
+        $result = $this->client->resetConstant('BaseConsensus.MAX_ATTEMPTS_TO_FETCH');
+
+        $body = $this->getLastRequestBody();
+        $this->assertEquals('constant', $body['method']);
+        $this->assertEquals('BaseConsensus.MAX_ATTEMPTS_TO_FETCH', $body['params'][0]);
+        $this->assertEquals('reset', $body['params'][1]);
+
+        $this->assertIsInt($result);
+        $this->assertEquals(5, $result);
+    }
+
     private function appendNextResponse($fixture)
     {
         $jsonResponse = file_get_contents(dirname(__FILE__).'/fixtures/'.$fixture);
