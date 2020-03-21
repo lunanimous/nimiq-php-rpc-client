@@ -77,7 +77,9 @@ class NimiqClient extends Client
      */
     public function getPeer($peer)
     {
-        return $this->request('peerState', $peer);
+        $result = $this->request('peerState', $peer);
+
+        return new Peer($result);
     }
 
     /**

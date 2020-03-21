@@ -116,6 +116,49 @@ class NimiqClientTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(count($result), 0);
     }
 
+    public function testGetPeerNormal()
+    {
+        $this->appendNextResponse('peerState/normal.json');
+
+        $result = $this->client->getPeer('wss://seed1.nimiq-testnet.com:8080/b99034c552e9c0fd34eb95c1cdf17f5e');
+
+        $body = $this->getLastRequestBody();
+        $this->assertEquals($body['method'], 'peerState');
+        $this->assertEquals($body['params'][0], 'wss://seed1.nimiq-testnet.com:8080/b99034c552e9c0fd34eb95c1cdf17f5e');
+
+        $this->assertInstanceOf(Peer::class, $result);
+        $this->assertEquals($result->id, 'b99034c552e9c0fd34eb95c1cdf17f5e');
+        $this->assertEquals($result->address, 'wss://seed1.nimiq-testnet.com:8080/b99034c552e9c0fd34eb95c1cdf17f5e');
+        $this->assertEquals($result->addressState, AddressState::Established);
+        $this->assertEquals($result->connectionState, ConnectionState::Established);
+    }
+
+    public function testGetPeerFailed()
+    {
+        $this->appendNextResponse('peerState/failed.json');
+
+        $result = $this->client->getPeer('wss://seed4.nimiq-testnet.com:8080/e37dca72802c972d45b37735e9595cf0');
+
+        $body = $this->getLastRequestBody();
+        $this->assertEquals($body['method'], 'peerState');
+        $this->assertEquals($body['params'][0], 'wss://seed4.nimiq-testnet.com:8080/e37dca72802c972d45b37735e9595cf0');
+
+        $this->assertInstanceOf(Peer::class, $result);
+        $this->assertEquals($result->id, 'e37dca72802c972d45b37735e9595cf0');
+        $this->assertEquals($result->address, 'wss://seed4.nimiq-testnet.com:8080/e37dca72802c972d45b37735e9595cf0');
+        $this->assertEquals($result->addressState, AddressState::Failed);
+        $this->assertEquals($result->connectionState, null);
+    }
+
+    public function testGetPeerError()
+    {
+        $this->expectException(BadMethodCallException::class);
+
+        $this->appendNextResponse('peerState/error.json');
+
+        $result = $this->client->getPeer('unknown');
+    }
+
     private function appendNextResponse($fixture)
     {
         $jsonResponse = file_get_contents(dirname(__FILE__).'/fixtures/'.$fixture);
