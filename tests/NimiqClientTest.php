@@ -586,6 +586,21 @@ class NimiqClientTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue(false);
     }
 
+    public function testGetWork()
+    {
+        $this->assertTrue(false);
+    }
+
+    public function testGetBlockTemplate()
+    {
+        $this->assertTrue(false);
+    }
+
+    public function submitBlock()
+    {
+        $this->assertTrue(false);
+    }
+
     private function appendNextResponse($fixture)
     {
         $jsonResponse = file_get_contents(dirname(__FILE__).'/fixtures/'.$fixture);
