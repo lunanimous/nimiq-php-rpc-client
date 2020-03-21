@@ -1,5 +1,9 @@
 <?php
 
+use Lunanimous\Rpc\Constants\AddressState;
+use Lunanimous\Rpc\Constants\ConnectionState;
+use Lunanimous\Rpc\Constants\ConsensusState;
+use Lunanimous\Rpc\Models\Peer;
 use Lunanimous\Rpc\NimiqClient;
 
 /**
@@ -63,6 +67,53 @@ class NimiqClientTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($body['method'], 'syncing');
 
         $this->assertEquals($result, false);
+    }
+
+    public function testGetConsensusState()
+    {
+        $this->appendNextResponse('consensus/syncing.json');
+
+        $result = $this->client->getConsensusState();
+
+        $body = $this->getLastRequestBody();
+        $this->assertEquals($body['method'], 'consensus');
+
+        $this->assertEquals($result, ConsensusState::Syncing);
+    }
+
+    public function testGetPeerListWithPeers()
+    {
+        $this->appendNextResponse('peerList/list.json');
+
+        $result = $this->client->getPeerList();
+
+        $body = $this->getLastRequestBody();
+        $this->assertEquals($body['method'], 'peerList');
+
+        $this->assertEquals(count($result), 2);
+        $this->assertInstanceOf(Peer::class, $result[0]);
+        $this->assertEquals($result[0]->id, 'b99034c552e9c0fd34eb95c1cdf17f5e');
+        $this->assertEquals($result[0]->address, 'wss://seed1.nimiq-testnet.com:8080/b99034c552e9c0fd34eb95c1cdf17f5e');
+        $this->assertEquals($result[0]->addressState, AddressState::Established);
+        $this->assertEquals($result[0]->connectionState, ConnectionState::Established);
+
+        $this->assertInstanceOf(Peer::class, $result[1]);
+        $this->assertEquals($result[1]->id, 'e37dca72802c972d45b37735e9595cf0');
+        $this->assertEquals($result[1]->address, 'wss://seed4.nimiq-testnet.com:8080/e37dca72802c972d45b37735e9595cf0');
+        $this->assertEquals($result[1]->addressState, AddressState::Failed);
+        $this->assertEquals($result[1]->connectionState, null);
+    }
+
+    public function testGetPeerListWhenEmpty()
+    {
+        $this->appendNextResponse('peerList/empty-list.json');
+
+        $result = $this->client->getPeerList();
+
+        $body = $this->getLastRequestBody();
+        $this->assertEquals($body['method'], 'peerList');
+
+        $this->assertEquals(count($result), 0);
     }
 
     private function appendNextResponse($fixture)
