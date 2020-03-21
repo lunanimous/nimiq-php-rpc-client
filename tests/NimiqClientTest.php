@@ -341,6 +341,37 @@ class NimiqClientTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($result, null);
     }
 
+    public function testGetTransactionsByAddress()
+    {
+        $this->appendNextResponse('getTransactions/transactions-found.json');
+
+        $result = $this->client->getTransactionsByAddress('NQ05 9VGU 0TYE NXBH MVLR E4JY UG6N 5701 MX9F');
+
+        $body = $this->getLastRequestBody();
+        $this->assertEquals($body['method'], 'getTransactionsByAddress');
+        $this->assertEquals($body['params'][0], 'NQ05 9VGU 0TYE NXBH MVLR E4JY UG6N 5701 MX9F');
+
+        $this->assertInstanceOf(Transaction::class, $result[0]);
+        $this->assertEquals($result[0]->hash, 'a514abb3ee4d3fbedf8a91156fb9ec4fdaf32f0d3d3da3c1dbc5fd1ee48db43e');
+        $this->assertInstanceOf(Transaction::class, $result[1]);
+        $this->assertEquals($result[1]->hash, 'c8c0f586b11c7f39873c3de08610d63e8bec1ceaeba5e8a3bb13c709b2935f73');
+        $this->assertInstanceOf(Transaction::class, $result[2]);
+        $this->assertEquals($result[2]->hash, 'fd8e46ae55c5b8cd7cb086cf8d6c81f941a516d6148021d55f912fb2ca75cc8e');
+    }
+
+    public function testGetTransactionsByAddressWhenNoFound()
+    {
+        $this->appendNextResponse('getTransactions/no-transactions-found.json');
+
+        $result = $this->client->getTransactionsByAddress('NQ10 9VGU 0TYE NXBH MVLR E4JY UG6N 5701 MX9F');
+
+        $body = $this->getLastRequestBody();
+        $this->assertEquals($body['method'], 'getTransactionsByAddress');
+        $this->assertEquals($body['params'][0], 'NQ10 9VGU 0TYE NXBH MVLR E4JY UG6N 5701 MX9F');
+
+        $this->assertEquals($result, []);
+    }
+
     private function appendNextResponse($fixture)
     {
         $jsonResponse = file_get_contents(dirname(__FILE__).'/fixtures/'.$fixture);
