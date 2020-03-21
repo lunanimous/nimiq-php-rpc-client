@@ -849,7 +849,7 @@ class NimiqClientTest extends \PHPUnit\Framework\TestCase
 
     public function testGetBlockNumber()
     {
-        $this->appendNextResponse('blockNumber/blockHeight.json');
+        $this->appendNextResponse('blockNumber/block-number.json');
 
         $result = $this->client->getBlockNumber();
 
