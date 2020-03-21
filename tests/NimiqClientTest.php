@@ -187,7 +187,16 @@ class NimiqClientTest extends \PHPUnit\Framework\TestCase
 
     public function testSendRawTransaction()
     {
-        $this->assertTrue(false);
+        $this->appendNextResponse('sendTransaction/transaction.json');
+
+        $result = $this->client->sendRawTransaction('00c3c0d1af80b84c3b3de4e3d79d5c8cc950e044098c969953d68bf9cee68d7b53305dbaac7514a06dae935e40d599caf1bd8a243c00000000000000010000000000000001000dc2e201b5a1755aec80aa4227d5afc6b0de0fcfede8541f31b3c07b9a85449ea9926c1c958628d85a2b481556034ab3d67ff7de28772520813c84aaaf8108f6297c580c');
+
+        $body = $this->getLastRequestBody();
+        $this->assertEquals('sendRawTransaction', $body['method']);
+        $this->assertEquals('00c3c0d1af80b84c3b3de4e3d79d5c8cc950e044098c969953d68bf9cee68d7b53305dbaac7514a06dae935e40d599caf1bd8a243c00000000000000010000000000000001000dc2e201b5a1755aec80aa4227d5afc6b0de0fcfede8541f31b3c07b9a85449ea9926c1c958628d85a2b481556034ab3d67ff7de28772520813c84aaaf8108f6297c580c', $body['params'][0]);
+
+        $this->assertIsString($result);
+        $this->assertEquals('81cf3f07b6b0646bb16833d57cda801ad5957e264b64705edeef6191fea0ad63', $result);
     }
 
     public function testCreateRawTransaction()
@@ -223,7 +232,34 @@ class NimiqClientTest extends \PHPUnit\Framework\TestCase
 
     public function testSendTransaction()
     {
-        $this->assertTrue(false);
+        $this->appendNextResponse('sendTransaction/transaction.json');
+
+        $transaction = new OutgoingTransaction();
+        $transaction->from = 'NQ39 NY67 X0F0 UTQE 0YER 4JEU B67L UPP8 G0FM';
+        $transaction->fromType = AccountType::Basic;
+        $transaction->to = 'NQ16 61ET MB3M 2JG6 TBLK BR0D B6EA X6XQ L91U';
+        $transaction->toType = AccountType::Basic;
+        $transaction->value = 1;
+        $transaction->fee = 1;
+
+        $result = $this->client->sendTransaction($transaction);
+
+        $body = $this->getLastRequestBody();
+        $this->assertEquals('sendTransaction', $body['method']);
+
+        $payload = $body['params'][0];
+        $this->assertEquals([
+            'from' => 'NQ39 NY67 X0F0 UTQE 0YER 4JEU B67L UPP8 G0FM',
+            'fromType' => 0,
+            'to' => 'NQ16 61ET MB3M 2JG6 TBLK BR0D B6EA X6XQ L91U',
+            'toType' => 0,
+            'value' => 1,
+            'fee' => 1,
+            'data' => null,
+        ], $payload);
+
+        $this->assertIsString($result);
+        $this->assertEquals('81cf3f07b6b0646bb16833d57cda801ad5957e264b64705edeef6191fea0ad63', $result);
     }
 
     public function testGetRawTransactionInfo()
