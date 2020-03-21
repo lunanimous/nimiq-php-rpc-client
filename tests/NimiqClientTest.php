@@ -12,6 +12,7 @@ use Lunanimous\Rpc\Models\Mempool;
 use Lunanimous\Rpc\Models\OutgoingTransaction;
 use Lunanimous\Rpc\Models\Peer;
 use Lunanimous\Rpc\Models\Transaction;
+use Lunanimous\Rpc\Models\TransactionReceipt;
 use Lunanimous\Rpc\Models\Wallet;
 use Lunanimous\Rpc\NimiqClient;
 
@@ -397,6 +398,38 @@ class NimiqClientTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($body['params'][0], '78957b87ab5546e11e9540ce5a37ebbf93a0ebd73c0ce05f137288f30ee9f430');
 
         $this->assertEquals($result, null);
+    }
+
+    public function testGetTransactionReceipt()
+    {
+        $this->appendNextResponse('getTransactionReceipt/receipt.json');
+
+        $result = $this->client->getTransactionReceipt('fd8e46ae55c5b8cd7cb086cf8d6c81f941a516d6148021d55f912fb2ca75cc8e');
+
+        $body = $this->getLastRequestBody();
+        $this->assertEquals('getTransactionReceipt', $body['method']);
+        $this->assertEquals('fd8e46ae55c5b8cd7cb086cf8d6c81f941a516d6148021d55f912fb2ca75cc8e', $body['params'][0]);
+
+        $this->assertInstanceOf(TransactionReceipt::class, $result);
+        $this->assertEquals('fd8e46ae55c5b8cd7cb086cf8d6c81f941a516d6148021d55f912fb2ca75cc8e', $result->transactionHash);
+        $this->assertEquals(-1, $result->transactionIndex);
+        $this->assertEquals(11608, $result->blockNumber);
+        $this->assertEquals('bc3945d22c9f6441409a6e539728534a4fc97859bda87333071fad9dad942786', $result->blockHash);
+        $this->assertEquals(1523412456, $result->timestamp);
+        $this->assertEquals(718846, $result->confirmations);
+    }
+
+    public function testGetTransactionReceiptWhenNotFound()
+    {
+        $this->appendNextResponse('getTransactionReceipt/not-found.json');
+
+        $result = $this->client->getTransactionReceipt('unknown');
+
+        $body = $this->getLastRequestBody();
+        $this->assertEquals('getTransactionReceipt', $body['method']);
+        $this->assertEquals('unknown', $body['params'][0]);
+
+        $this->assertNull($result);
     }
 
     public function testGetTransactionsByAddress()

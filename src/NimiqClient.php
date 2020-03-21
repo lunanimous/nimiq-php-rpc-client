@@ -216,6 +216,10 @@ class NimiqClient extends Client
     {
         $result = $this->request('getTransactionReceipt', $hash);
 
+        if (is_null($result)) {
+            return null;
+        }
+
         return new TransactionReceipt($result);
     }
 

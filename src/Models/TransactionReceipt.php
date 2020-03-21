@@ -2,8 +2,6 @@
 
 namespace Lunanimous\Rpc\Models;
 
-use Lunanimous\Rpc\Model;
-
 class TransactionReceipt extends Model
 {
     /**
