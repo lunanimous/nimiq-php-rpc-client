@@ -4,7 +4,7 @@ use Lunanimous\Rpc\Client;
 
 /**
  * @internal
- * @coversNothing
+ * @coversDefaultClass \Lunanimous\Rpc\Client
  */
 class ClientTest extends \PHPUnit\Framework\TestCase
 {

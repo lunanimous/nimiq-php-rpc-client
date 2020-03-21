@@ -5,7 +5,7 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @internal
- * @coversNothing
+ * @coversDefaultClass \Lunanimous\Rpc\Response
  */
 class ResponseTest extends TestCase
 {

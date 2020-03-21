@@ -17,7 +17,7 @@ use Lunanimous\Rpc\NimiqClient;
 
 /**
  * @internal
- * @coversNothing
+ * @coversDefaultClass \Lunanimous\Rpc\NimiqClient
  */
 class NimiqClientTest extends \PHPUnit\Framework\TestCase
 {
@@ -38,6 +38,13 @@ class NimiqClientTest extends \PHPUnit\Framework\TestCase
         ]);
 
         $this->client->setClient($httpClient);
+    }
+
+    public function testNimiqClientCanBeInstanciated()
+    {
+        $client = new NimiqClient();
+
+        $this->assertInstanceOf(NimiqClient::class, $client);
     }
 
     public function testGetPeerCount()
