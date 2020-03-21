@@ -2,12 +2,8 @@
 
 namespace Lunanimous\Rpc\Models;
 
-use InvalidArgumentException;
-
 abstract class Model
 {
-    protected $required = [];
-
     /**
      * Create a new model instance.
      *
@@ -15,12 +11,6 @@ abstract class Model
      */
     public function __construct($attributes = [])
     {
-        $diff = array_diff_key($this->required, $attributes);
-
-        if (count($diff) > 0) {
-            throw new InvalidArgumentException('Missing attributes');
-        }
-
         $this->fill($attributes);
     }
 

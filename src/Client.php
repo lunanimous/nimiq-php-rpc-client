@@ -49,7 +49,6 @@ class Client
         $httpClient = new GuzzleHttp([
             'base_uri' => $this->getBaseUri(),
             'auth' => $this->getAuth(),
-            'verify' => $this->getCa(),
             'timeout' => (float) $this->config['timeout'],
             'connect_timeout' => (float) $this->config['timeout'],
         ]);
@@ -86,18 +85,6 @@ class Client
             $this->config['user'],
             $this->config['password'],
         ];
-    }
-
-    /**
-     * Gets CA file from config.
-     */
-    public function getCa(): ?string
-    {
-        if (isset($this->config['ca']) && is_file($this->config['ca'])) {
-            return $this->config['ca'];
-        }
-
-        return null;
     }
 
     /**
