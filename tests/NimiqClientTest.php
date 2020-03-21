@@ -7,6 +7,7 @@ use Lunanimous\Rpc\Constants\ConsensusState;
 use Lunanimous\Rpc\Constants\PeerStateCommand;
 use Lunanimous\Rpc\Models\OutgoingTransaction;
 use Lunanimous\Rpc\Models\Peer;
+use Lunanimous\Rpc\Models\Transaction;
 use Lunanimous\Rpc\NimiqClient;
 
 /**
@@ -209,6 +210,26 @@ class NimiqClientTest extends \PHPUnit\Framework\TestCase
         ]);
 
         $this->assertEquals($result, '00c3c0d1af80b84c3b3de4e3d79d5c8cc950e044098c969953d68bf9cee68d7b53305dbaac7514a06dae935e40d599caf1bd8a243c00000000000186a00000000000000001000af84c01239b16cee089836c2af5c7b1dbb22cdc0b4864349f7f3805909aa8cf24e4c1ff0461832e86f3624778a867d5f2ba318f92918ada7ae28d70d40c4ef1d6413802');
+    }
+
+    public function testGetRawTransactionInfo()
+    {
+        $this->appendNextResponse('getRawTransactionInfo/basic-transaction.json');
+
+        $result = $this->client->getRawTransactionInfo('00c3c0d1af80b84c3b3de4e3d79d5c8cc950e044098c969953d68bf9cee68d7b53305dbaac7514a06dae935e40d599caf1bd8a243c00000000000186a00000000000000001000af84c01239b16cee089836c2af5c7b1dbb22cdc0b4864349f7f3805909aa8cf24e4c1ff0461832e86f3624778a867d5f2ba318f92918ada7ae28d70d40c4ef1d6413802');
+
+        $body = $this->getLastRequestBody();
+        $this->assertEquals($body['method'], 'getRawTransactionInfo');
+        $this->assertEquals($body['params'][0], '00c3c0d1af80b84c3b3de4e3d79d5c8cc950e044098c969953d68bf9cee68d7b53305dbaac7514a06dae935e40d599caf1bd8a243c00000000000186a00000000000000001000af84c01239b16cee089836c2af5c7b1dbb22cdc0b4864349f7f3805909aa8cf24e4c1ff0461832e86f3624778a867d5f2ba318f92918ada7ae28d70d40c4ef1d6413802');
+
+        $this->assertInstanceOf(Transaction::class, $result);
+        $this->assertEquals($result->hash, '7784f2f6eaa076fa5cf0e4d06311ad204b2f485de622231785451181e8129091');
+        $this->assertEquals($result->from, 'b7cc7f01e0e6f0e07dd9249dc598f4e5ee8801f5');
+        $this->assertEquals($result->fromAddress, 'NQ39 NY67 X0F0 UTQE 0YER 4JEU B67L UPP8 G0FM');
+        $this->assertEquals($result->to, '305dbaac7514a06dae935e40d599caf1bd8a243c');
+        $this->assertEquals($result->toAddress, 'NQ16 61ET MB3M 2JG6 TBLK BR0D B6EA X6XQ L91U');
+        $this->assertEquals($result->value, 100000);
+        $this->assertEquals($result->fee, 1);
     }
 
     private function appendNextResponse($fixture)
