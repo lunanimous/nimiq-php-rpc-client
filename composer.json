@@ -9,12 +9,17 @@
             "email": "builtbysplash@gmail.com"
         }
     ],
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "docs": "vendor/bin/phpdoc"
+    },
     "require": {
         "php": ">=7.1",
         "guzzlehttp/guzzle": "^6.5"
     },
     "require-dev": {
-        "phpunit/phpunit": "^8.0"
+        "phpunit/phpunit": "^8.0",
+        "cvuorinen/phpdoc-markdown-public": "^0.2"
     },
     "autoload": {
         "psr-4": {

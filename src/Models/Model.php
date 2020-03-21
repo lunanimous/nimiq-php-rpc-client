@@ -2,6 +2,9 @@
 
 namespace Lunanimous\Rpc\Models;
 
+/**
+ * @internal
+ */
 abstract class Model
 {
     /**
