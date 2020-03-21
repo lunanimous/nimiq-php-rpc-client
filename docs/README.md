@@ -3,6 +3,7 @@
 ## Table of Contents
 
 * [NimiqClient](#nimiqclient)
+    * [__construct](#__construct)
     * [getPeerCount](#getpeercount)
     * [getSyncingState](#getsyncingstate)
     * [getConsensusState](#getconsensusstate)
@@ -58,6 +59,32 @@ RPC Client to communicate with a Nimiq Node.
 * Full name: \Lunanimous\Rpc\NimiqClient
 * Parent class: 
 
+
+### __construct
+
+Creates a new instance of the Nimiq client.
+
+```php
+NimiqClient::__construct( array $config = array() ): \Lunanimous\Rpc\NimiqClient
+```
+
+
+
+
+**Parameters:**
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `$config` | **array** | client config array (optional) |
+
+
+**Return Value:**
+
+new client instance
+
+
+
+---
 
 ### getPeerCount
 

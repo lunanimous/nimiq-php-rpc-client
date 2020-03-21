@@ -28,7 +28,6 @@ class Client
         'port' => 8648,
         'user' => null,
         'password' => null,
-        'ca' => null,
         'timeout' => false,
     ];
 
