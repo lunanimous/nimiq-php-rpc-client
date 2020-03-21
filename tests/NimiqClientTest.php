@@ -469,6 +469,33 @@ class NimiqClientTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($result, 0);
     }
 
+    public function testGetMiningState()
+    {
+        $this->appendNextResponse('miningState/mining.json');
+
+        $result = $this->client->getMiningState();
+
+        $body = $this->getLastRequestBody();
+        $this->assertEquals($body['method'], 'mining');
+
+        $this->assertIsBool($result);
+        $this->assertEquals($result, false);
+    }
+
+    public function testSetMiningState()
+    {
+        $this->appendNextResponse('miningState/mining.json');
+
+        $result = $this->client->setMiningState(false);
+
+        $body = $this->getLastRequestBody();
+        $this->assertEquals($body['method'], 'mining');
+        $this->assertEquals($body['params'][0], false);
+
+        $this->assertIsBool($result);
+        $this->assertEquals($result, false);
+    }
+
     private function appendNextResponse($fixture)
     {
         $jsonResponse = file_get_contents(dirname(__FILE__).'/fixtures/'.$fixture);
