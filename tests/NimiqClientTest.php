@@ -5,6 +5,7 @@ use Lunanimous\Rpc\Constants\AddressState;
 use Lunanimous\Rpc\Constants\ConnectionState;
 use Lunanimous\Rpc\Constants\ConsensusState;
 use Lunanimous\Rpc\Constants\PeerStateCommand;
+use Lunanimous\Rpc\Models\Mempool;
 use Lunanimous\Rpc\Models\OutgoingTransaction;
 use Lunanimous\Rpc\Models\Peer;
 use Lunanimous\Rpc\Models\Transaction;
@@ -351,6 +352,7 @@ class NimiqClientTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($body['method'], 'getTransactionsByAddress');
         $this->assertEquals($body['params'][0], 'NQ05 9VGU 0TYE NXBH MVLR E4JY UG6N 5701 MX9F');
 
+        $this->assertCount(3, $result);
         $this->assertInstanceOf(Transaction::class, $result[0]);
         $this->assertEquals($result[0]->hash, 'a514abb3ee4d3fbedf8a91156fb9ec4fdaf32f0d3d3da3c1dbc5fd1ee48db43e');
         $this->assertInstanceOf(Transaction::class, $result[1]);
@@ -370,6 +372,74 @@ class NimiqClientTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($body['params'][0], 'NQ10 9VGU 0TYE NXBH MVLR E4JY UG6N 5701 MX9F');
 
         $this->assertEquals($result, []);
+    }
+
+    public function testGetMempoolContentHashesOnly()
+    {
+        $this->appendNextResponse('mempoolContent/hashes-only.json');
+
+        $result = $this->client->getMempoolContent();
+
+        $body = $this->getLastRequestBody();
+        $this->assertEquals($body['method'], 'mempoolContent');
+        $this->assertEquals($body['params'][0], false);
+
+        $this->assertCount(3, $result);
+        $this->assertIsString($result[0]);
+        $this->assertEquals($result[0], '5bb722c2afe25c18ba33d453b3ac2c90ac278c595cc92f6188c8b699e8fb006a');
+        $this->assertIsString($result[1]);
+        $this->assertEquals($result[1], 'f59a30e0a7e3348ef569225db1f4c29026aeac4350f8c6e751f669eddce0c718');
+        $this->assertIsString($result[2]);
+        $this->assertEquals($result[2], '9cd9c1d0ffcaebfcfe86bc2ae73b4e82a488de99c8e3faef92b05432bb94519c');
+    }
+
+    public function testGetMempoolContentFullTransactions()
+    {
+        $this->appendNextResponse('mempoolContent/full-transactions.json');
+
+        $result = $this->client->getMempoolContent(true);
+
+        $body = $this->getLastRequestBody();
+        $this->assertEquals($body['method'], 'mempoolContent');
+        $this->assertEquals($body['params'][0], true);
+
+        $this->assertCount(3, $result);
+        $this->assertInstanceOf(Transaction::class, $result[0]);
+        $this->assertEquals($result[0]->hash, '5bb722c2afe25c18ba33d453b3ac2c90ac278c595cc92f6188c8b699e8fb006a');
+        $this->assertInstanceOf(Transaction::class, $result[1]);
+        $this->assertEquals($result[1]->hash, 'f59a30e0a7e3348ef569225db1f4c29026aeac4350f8c6e751f669eddce0c718');
+        $this->assertInstanceOf(Transaction::class, $result[2]);
+        $this->assertEquals($result[2]->hash, '9cd9c1d0ffcaebfcfe86bc2ae73b4e82a488de99c8e3faef92b05432bb94519c');
+    }
+
+    public function testGetMempoolWhenFull()
+    {
+        $this->appendNextResponse('mempool/mempool.json');
+
+        $result = $this->client->getMempool();
+
+        $body = $this->getLastRequestBody();
+        $this->assertEquals($body['method'], 'mempool');
+
+        $this->assertInstanceOf(Mempool::class, $result);
+        $this->assertEquals($result->total, 3);
+        $this->assertEquals($result->buckets, [1]);
+        $this->assertEquals($result->transactionsPerBucket[1], 3);
+    }
+
+    public function testGetMempoolWhenEmpty()
+    {
+        $this->appendNextResponse('mempool/mempool-empty.json');
+
+        $result = $this->client->getMempool();
+
+        $body = $this->getLastRequestBody();
+        $this->assertEquals($body['method'], 'mempool');
+
+        $this->assertInstanceOf(Mempool::class, $result);
+        $this->assertEquals($result->total, 0);
+        $this->assertEquals($result->buckets, []);
+        $this->assertEquals($result->transactionsPerBucket, []);
     }
 
     private function appendNextResponse($fixture)
