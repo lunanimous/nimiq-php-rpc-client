@@ -5,6 +5,7 @@ use Lunanimous\Rpc\Constants\AddressState;
 use Lunanimous\Rpc\Constants\ConnectionState;
 use Lunanimous\Rpc\Constants\ConsensusState;
 use Lunanimous\Rpc\Constants\PeerStateCommand;
+use Lunanimous\Rpc\Constants\PoolConnectionState;
 use Lunanimous\Rpc\Models\Account;
 use Lunanimous\Rpc\Models\Block;
 use Lunanimous\Rpc\Models\Mempool;
@@ -600,7 +601,29 @@ class NimiqClientTest extends \PHPUnit\Framework\TestCase
 
     public function testGetPool()
     {
-        $this->assertTrue(false);
+        $this->appendNextResponse('pool/sushipool.json');
+
+        $result = $this->client->getPool();
+
+        $body = $this->getLastRequestBody();
+        $this->assertEquals('pool', $body['method']);
+
+        $this->assertIsString($result);
+        $this->assertEquals('us.sushipool.com:443', $result);
+    }
+
+    public function testSetPool()
+    {
+        $this->appendNextResponse('pool/sushipool.json');
+
+        $result = $this->client->setPool('us.sushipool.com:443');
+
+        $body = $this->getLastRequestBody();
+        $this->assertEquals('pool', $body['method']);
+        $this->assertEquals('us.sushipool.com:443', $body['params'][0]);
+
+        $this->assertIsString($result);
+        $this->assertEquals('us.sushipool.com:443', $result);
     }
 
     public function testGetPoolWhenNoPool()
@@ -617,12 +640,28 @@ class NimiqClientTest extends \PHPUnit\Framework\TestCase
 
     public function testGetPoolConnectionState()
     {
-        $this->assertTrue(false);
+        $this->appendNextResponse('pool/connection-state.json');
+
+        $result = $this->client->getPoolConnectionState();
+
+        $body = $this->getLastRequestBody();
+        $this->assertEquals('poolConnectionState', $body['method']);
+
+        $this->assertIsInt($result);
+        $this->assertEquals(PoolConnectionState::Closed, $result);
     }
 
     public function testGetPoolConfirmedBalance()
     {
-        $this->assertTrue(false);
+        $this->appendNextResponse('pool/confirmed-balance.json');
+
+        $result = $this->client->getPoolConfirmedBalance();
+
+        $body = $this->getLastRequestBody();
+        $this->assertEquals('poolConfirmedBalance', $body['method']);
+
+        $this->assertIsInt($result);
+        $this->assertEquals(12000, $result);
     }
 
     public function testGetWork()
@@ -635,7 +674,7 @@ class NimiqClientTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue(false);
     }
 
-    public function submitBlock()
+    public function testSubmitBlock()
     {
         $this->assertTrue(false);
     }
