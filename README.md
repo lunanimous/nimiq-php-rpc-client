@@ -2,6 +2,13 @@
 
 > PHP implementation of the Nimiq RPC client specs.
 
+## About
+
+[![Latest Stable Version](https://poser.pugx.org/lunanimous/php-rpc-client/v/stable)](https://packagist.org/packages/lunanimous/php-rpc-client)
+![continuous integration](https://github.com/lunanimous/nimiq-php-rpc-client/workflows/continuous%20integration/badge.svg)
+
+A Nimiq RPC client library in PHP. This client library implements the [Nimiq RPC specification](https://github.com/nimiq/core-js/wiki/JSON-RPC-API).
+
 ## Installation
 
 The recommended way to install Nimiq PHP Client is with Composer. Composer is a dependency management tool for PHP that
