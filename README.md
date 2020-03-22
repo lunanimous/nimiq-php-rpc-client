@@ -62,11 +62,11 @@ $blockNumber = $client->getBlockNumber();
 echo $blockNumber;
 ```
 
-To discover all methods that are available head over to [the documentation](./tree/master/docs).
+To discover all methods that are available head over to [the documentation](https://github.com/lunanimous/nimiq-php-rpc-client/tree/master/docs).
 
 ## Documentation
 
-The complete documentation is available in the `/docs` folder, you can also [view it here](./tree/master/docs).
+The complete documentation is available in the `/docs` folder, you can also [view it here](https://github.com/lunanimous/nimiq-php-rpc-client/tree/master/docs).
 
 You can also check out the [Nimiq RPC  specs](https://github.com/nimiq/core-js/wiki/JSON-RPC-API) which this client is compliant.
 
