@@ -1,6 +1,0 @@
-{
-    "editor.formatOnSave": true,
-    "editor.defaultFormatter": "junstyle.php-cs-fixer",
-    "php-cs-fixer.rules": "@PhpCsFixer",
-    "editor.quickSuggestions": { "comments": true },
-}
